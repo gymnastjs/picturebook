@@ -1,0 +1,19 @@
+{
+  "name": "picturebook",
+  "version": "1.0.0",
+  "description": "Opinionated Storybook Setup",
+  "main": "index.js",
+  "repository": "https://github.com/obartra/picturebook",
+  "author": "Oscar Bartra <obartra@taser.com>",
+  "license": "MIT",
+  "bin": {
+    "picturebook": "./picturebook.sh"
+  },
+  "dependencies": {
+    "@storybook/addon-knobs": "3.2.14",
+    "@storybook/addon-notes": "3.2.14",
+    "@storybook/react": "3.2.14",
+    "find-up": "2.1.0",
+    "lodash": "4.17.4"
+  }
+}
