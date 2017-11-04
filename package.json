@@ -7,7 +7,12 @@
   "author": "Oscar Bartra <obartra@taser.com>",
   "license": "MIT",
   "bin": {
-    "picturebook": "./picturebook.sh"
+    "picturebook": "./picturebook.sh",
+    "picturebook-build": "./picturebook-build.sh"
+  },
+  "scripts": {
+    "format-all": "git ls-files {config,}*.{js,css} | xargs yarn format",
+    "format": "prettier --write --single-quote --no-semi --trailing-comma es5"
   },
   "dependencies": {
     "@storybook/addon-knobs": "3.2.14",
@@ -16,6 +21,7 @@
     "@storybook/react": "3.2.14",
     "find-up": "2.1.0",
     "lodash": "4.17.4",
+    "rc": "1.2.2",
     "react": "16.0.0",
     "react-dom": "16.0.0",
     "storybook-addon-jsx": "5.0.0"
@@ -39,6 +45,7 @@
     "eslint-plugin-flowtype": "2.39.1",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jsx-a11y": "6.0.2",
-    "eslint-plugin-react": "7.4.0"
+    "eslint-plugin-react": "7.4.0",
+    "prettier": "1.7.4"
   }
 }

@@ -1,1 +1,1 @@
-export * from "@storybook/addon-knobs";
+export * from '@storybook/addon-knobs'
