@@ -4,6 +4,6 @@ You can access the source code by checking the github page [here]([[url]]) or cl
 
 The `JSX` tab contains the code as rendered for the current knob combination whereas the link above will show the content as it was written.
 
-## ⚙️ Dev Mode
+## ⚙️ Setup
 
-You can toggle a top level column overlay by pressing `ctrl+shift+k` or `cmd+shift+k`. Background dev colors can be togged as well with `ctrl+shift+s` or `cmd+shift+s`. These are the default reflex values but you can customize them through `initDevMode`.
+This is the default footer. To customize this message, specify a `markdownFooter` parameter with the path to a markdown file.

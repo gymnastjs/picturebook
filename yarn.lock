@@ -6,7 +6,7 @@
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@hypnosphi/fuse.js/-/fuse.js-3.0.9.tgz#ea99f6121b4a8f065b4c71f85595db2714498807"
 
-"@storybook/addon-actions@^3.2.14":
+"@storybook/addon-actions@3.2.14", "@storybook/addon-actions@^3.2.14":
   version "3.2.14"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-3.2.14.tgz#ba20befc3cd67ffdb3cd58eed6702102d58602c2"
   dependencies:
@@ -69,7 +69,7 @@
     global "^4.3.2"
     json-stringify-safe "^5.0.1"
 
-"@storybook/channels@^3.2.14":
+"@storybook/channels@3.2.14", "@storybook/channels@^3.2.14":
   version "3.2.14"
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-3.2.14.tgz#0d7522bff3fdefe534828e80ef3b3b1360057c9e"
 

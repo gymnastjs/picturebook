@@ -15,9 +15,11 @@
     "format": "prettier --write --single-quote --no-semi --trailing-comma es5"
   },
   "dependencies": {
+    "@storybook/addon-actions": "3.2.14",
     "@storybook/addon-knobs": "3.2.14",
     "@storybook/addon-notes": "3.2.14",
     "@storybook/addon-options": "3.2.14",
+    "@storybook/channels": "3.2.14",
     "@storybook/react": "3.2.14",
     "find-up": "2.1.0",
     "lodash": "4.17.4",

@@ -52,7 +52,11 @@ function configStories(storiesOfName: string, storiesModule: typeof module) {
 function addStory({ story: WrappedComponent, notes, name }, component) {
   component.add(name, () => (
     <WithExtensions notes={notes}>
-      <WrappedComponent />
+      {typeof WrappedComponent === 'function' ? (
+        WrappedComponent()
+      ) : (
+        <WrappedComponent />
+      )}
     </WithExtensions>
   ))
 }
