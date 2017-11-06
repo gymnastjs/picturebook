@@ -1,14 +1,15 @@
-const { resolve } = require('path')
+const { resolve, join } = require('path')
 const { root } = require('../params')
 
 module.exports = (baseConfig, env) => {
+  const picturebookPath = resolve(root, 'node_modules/picturebook')
   const jsConfig = Object.assign(baseConfig.module.rules[0], {
     include: [
       ...baseConfig.module.rules[0].include,
       // resolve(__dirname, '..'), // dev only
-      resolve(root, 'node_modules/picturebook'),
+      picturebookPath,
     ],
-    exclude: [],
+    exclude: [join(picturebookPath, '/node_modules')],
   })
   baseConfig.node = {
     fs: 'empty',

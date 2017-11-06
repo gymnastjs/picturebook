@@ -11,7 +11,7 @@ const config = rc(name, {
   projectUrl: 'https://github.com/obartra/picturebook',
   root,
 })
-;[('markdownFooter', 'storyPath', 'entryPoint')].forEach(key => {
+;['markdownFooter', 'storyPath', 'entryPoint'].forEach(key => {
   config[key] = resolve(config.root, config[key])
 })
 
