@@ -11,8 +11,10 @@ const config = rc(name, {
   projectUrl: 'https://github.com/obartra/picturebook',
   root,
 })
-;['markdownFooter', 'storyPath', 'entryPoint'].forEach(key => {
-  config[key] = resolve(config.root, config[key])
+;['markdownFooter', 'storyPath', 'entryPoint', 'postcssConfig'].forEach(key => {
+  if (key in config) {
+    config[key] = resolve(config.root, config[key])
+  }
 })
 
 module.exports = config

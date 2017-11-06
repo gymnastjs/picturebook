@@ -1,12 +1,12 @@
 const { resolve, join } = require('path')
-const { root } = require('../params')
+const { root, postcssConfig } = require('../params')
 
 module.exports = (baseConfig, env) => {
   const picturebookPath = resolve(root, 'node_modules/picturebook')
   const jsConfig = Object.assign(baseConfig.module.rules[0], {
     include: [
       ...baseConfig.module.rules[0].include,
-      // resolve(__dirname, '..'), // dev only
+      resolve(__dirname, '..'), // dev only
       picturebookPath,
     ],
     exclude: [join(picturebookPath, '/node_modules')],
@@ -40,7 +40,11 @@ module.exports = (baseConfig, env) => {
     },
     {
       test: /\.css$/,
-      include: resolve(__dirname, '../../'),
+      include: [
+        root,
+        resolve(__dirname, '..'), // dev only
+        picturebookPath,
+      ],
       use: [
         'style-loader',
         {
@@ -56,7 +60,7 @@ module.exports = (baseConfig, env) => {
           loader: 'postcss-loader',
           options: {
             config: {
-              path: resolve(root, 'scripts/postcss.config.js'),
+              path: postcssConfig,
             },
           },
         },
