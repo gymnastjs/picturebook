@@ -6,7 +6,7 @@ module.exports = (baseConfig, env) => {
   const jsConfig = Object.assign(baseConfig.module.rules[0], {
     include: [
       ...baseConfig.module.rules[0].include,
-      resolve(__dirname, '..'), // dev only
+      // resolve(__dirname, '..'), // dev only
       picturebookPath,
     ],
     exclude: [join(picturebookPath, '/node_modules')],
@@ -42,7 +42,7 @@ module.exports = (baseConfig, env) => {
       test: /\.css$/,
       include: [
         root,
-        resolve(__dirname, '..'), // dev only
+        // resolve(__dirname, '..'), // dev only
         picturebookPath,
       ],
       use: [
