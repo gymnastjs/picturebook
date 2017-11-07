@@ -9,7 +9,7 @@
   "bin": {
     "picturebook": "./picturebook.sh",
     "picturebook-build": "./picturebook-build.sh",
-    "picturebook-jest": "./picturebook-jest.js"
+    "picturebook-jest": "./picturebook-jest.sh"
   },
   "scripts": {
     "format-all": "git ls-files {config,}*.{js,css} | xargs yarn format",
@@ -25,6 +25,8 @@
     "enzyme": "3.1.1",
     "enzyme-adapter-react-16": "1.0.4",
     "find-up": "2.1.0",
+    "harmony-reflect": "1.5.1",
+    "identity-obj-proxy": "3.0.0",
     "lodash": "4.17.4",
     "nightwatch": "0.9.16",
     "node-resemble-js": "0.2.0",
