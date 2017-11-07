@@ -8,7 +8,8 @@
   "license": "MIT",
   "bin": {
     "picturebook": "./picturebook.sh",
-    "picturebook-build": "./picturebook-build.sh"
+    "picturebook-build": "./picturebook-build.sh",
+    "picturebook-jest": "./picturebook-jest.js"
   },
   "scripts": {
     "format-all": "git ls-files {config,}*.{js,css} | xargs yarn format",
@@ -21,16 +22,23 @@
     "@storybook/addon-options": "3.2.14",
     "@storybook/channels": "3.2.14",
     "@storybook/react": "3.2.14",
+    "enzyme": "3.1.1",
+    "enzyme-adapter-react-16": "1.0.4",
     "find-up": "2.1.0",
     "lodash": "4.17.4",
+    "nightwatch": "0.9.16",
+    "node-resemble-js": "0.2.0",
     "rc": "1.2.2",
     "react": "16.0.0",
     "react-dom": "16.0.0",
+    "saucelabs": "1.4.0",
+    "selenium-standalone": "6.11.0",
     "storybook-addon-jsx": "5.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-eslint": "8.0.1",
+    "babel-jest": "21.2.0",
     "babel-plugin-flow-react-proptypes": "8.0.0",
     "babel-plugin-lodash": "3.2.11",
     "babel-plugin-module-resolver": "2.7.1",
@@ -49,6 +57,7 @@
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jsx-a11y": "6.0.2",
     "eslint-plugin-react": "7.4.0",
+    "jest": "21.2.1",
     "postcss-cssnext": "3.0.2",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-import": "11.0.0",
