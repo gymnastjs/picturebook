@@ -1,5 +1,5 @@
 /* eslint-disable global-require, import/no-dynamic-require */
-const { root, jestConfig} = require('./params')
+const { root, picturebookPath, jestConfig} = require('./params')
 
 let extend = {}
 if (jestConfig) {
@@ -7,15 +7,17 @@ if (jestConfig) {
 }
 
 module.exports = {
-  roots: [root, __dirname],
+  ...extend,
+  rootDir: root,
   collectCoverageFrom: ['<rootDir>/src/{,**/}*.js'],
-  setupTestFrameworkScriptFile:
-    '<rootDir>/test/env.js',
+  setupFiles:
+    [`${picturebookPath}/test/env.js`, ...(extend.setupFiles || [])],
   moduleNameMapper: {
-    '^.+[.]css$': '<rootDir>/test/identityStub.js',
-    '^.+[.](md|txt)$': '<rootDir>/test/stringStub.js',
+    '^.+[.]css$': `${picturebookPath}/test/identityStub.js`,
+    '^.+[.](md|txt)$': `${picturebookPath}/test/stringStub.js`,
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!picturebook)'],
-  testMatch: ['<rootDir>/**/?(*.)(spec|test).js'],
-  ...extend
+  testPathIgnorePatterns: ['<rootDir>/node_modules/(?!picturebook)'],
+  testMatch: [`${picturebookPath}/test/*.spec.js`, ...(extend.testMatch || [])],
+  verbose: true
 }

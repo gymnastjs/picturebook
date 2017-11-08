@@ -11,12 +11,14 @@ const config = rc(name, {
   entryPoint: join(picturebookPath, 'index.js'),
   markdownFooter: join(picturebookPath, 'shared/storyFolders/footer.md'),
   projectUrl: 'https://github.com/obartra/picturebook',
+  picturebookPath,
   root,
 })
-;['markdownFooter', 'storyPath', 'entryPoint', 'postcssConfig', 'jestConfig'].forEach(key => {
+;['markdownFooter', 'storyPath', 'entryPoint', 'postcssConfig', 'jestConfig', 'picturebookPath'].forEach(key => {
   if (key in config) {
     config[key] = resolve(config.root, config[key])
   }
 })
+
 
 module.exports = config

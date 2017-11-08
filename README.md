@@ -25,3 +25,5 @@ Create a `.picturebookrc` file on the root of the project with the following opt
 To use `@storybook/addon-actions` import `picturebook/actions`.
 
 For `@storybook/addon-knobs` import `picturebook/knobs`.
+
+To run unit automated snapshots on your stories, create a test file importing `picturebook/screenshot`.
