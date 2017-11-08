@@ -4,7 +4,6 @@ const cssNesting = require('postcss-nesting')
 const cssNext = require('postcss-cssnext')
 const cssFlexFix = require('postcss-flexbugs-fixes')
 const { postcssConfig, root } = require('../params')
-const userConfig = require('/Users/obartra/repos/reflex/scripts/postcss.config.js')
 
 module.exports = {
   plugins: [

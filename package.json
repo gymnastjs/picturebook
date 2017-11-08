@@ -9,7 +9,8 @@
   "bin": {
     "picturebook": "./picturebook.sh",
     "picturebook-build": "./picturebook-build.sh",
-    "picturebook-jest": "./picturebook-jest.sh"
+    "picturebook-jest": "./picturebook-jest.sh",
+    "picturebook-image": "./picturebook-image.sh"
   },
   "scripts": {
     "format-all": "git ls-files {config,}*.{js,css} | xargs yarn format",

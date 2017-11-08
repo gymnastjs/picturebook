@@ -1,5 +1,5 @@
 const { find } = require('lodash')
-const browsers = require('../browsers.json')
+const { browsers } = require('../../../params')
 
 const isCIMaster = process.env.CI && process.env.CIRCLE_BRANCH === 'master'
 const suffix = isCIMaster ? '_MASTER' : ''

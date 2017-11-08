@@ -1,7 +1,7 @@
 const path = require('path')
 const { merge, mapValues } = require('lodash')
 const { isCIMaster, username, accessKey } = require('./shared')
-const browsers = require('./browsers.json')
+const { browsers, projectName } = require('../../params')
 
 process.env.NODE_ENV = 'test:image'
 
@@ -27,7 +27,7 @@ const commonSettings = {
   },
   desiredCapabilities: {
     tags: [
-      isCIMaster ? 'reflex' : 'reflex-branch',
+      isCIMaster ? projectName : `${projectName}-branch`,
       process.env.CIRCLE_BRANCH || 'local',
     ],
     build: process.env.CIRCLE_BUILD_NUM || 'dev',
