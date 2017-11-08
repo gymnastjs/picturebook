@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Opinionated Storybook Setup",
   "main": "index.js",
   "repository": "https://github.com/obartra/picturebook",
