@@ -62,6 +62,9 @@ exports.command = function command(filename, baseline, sessionId, browserName) {
         .toFile(temp)
         .then(movePartial)
         .then(check)
+        .catch(error => {
+          throw new Error(error)
+        })
     }
 
     return check()
