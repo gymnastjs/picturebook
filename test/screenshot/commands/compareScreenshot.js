@@ -5,6 +5,7 @@ const { moveSync } = require('fs-extra')
 const sharp = require('sharp')
 const { noop } = require('lodash')
 const { getBrowserData } = require('../shared')
+const { root, picturebookPath } = require('../../../params')
 
 sharp.concurrency(1)
 
@@ -53,8 +54,8 @@ exports.command = function command(filename, baseline, sessionId, browserName) {
     const check = isValid.bind(this, this.assert, screenshot, ...arguments)
 
     if (extract) {
-      const target = resolve(__dirname, '../../..', resultPath)
-      const temp = resolve(__dirname, '../../../temp.png')
+      const target = resolve(root, resultPath)
+      const temp = resolve(picturebookPath, 'temp.png')
       const movePartial = move.bind(this, temp, target, 0)
 
       return sharp(target)

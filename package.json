@@ -25,6 +25,7 @@
     "@storybook/channels": "3.2.14",
     "@storybook/react": "3.2.14",
     "find-up": "2.1.0",
+    "fs-extra": "4.0.2",
     "harmony-reflect": "1.5.1",
     "identity-obj-proxy": "3.0.0",
     "jest": "21.2.1",
