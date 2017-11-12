@@ -14,7 +14,7 @@ $ yarn add --dev picturebook
 
 Configure it creating `.picturebookrc` file on your root directory. The following are the default values:
 
-```json
+```js
 {
   "projectName": "PictureBook",
   "projectUrl": "https://github.com/obartra/picturebook",
