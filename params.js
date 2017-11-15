@@ -84,7 +84,7 @@ const config = rc(name, {
     safari: {
       desiredCapabilities: {
         platform: 'macOS 10.12',
-        version: '10.0',
+        version: '11.0',
         browserName: 'safari',
         screenResolution: '1280x960',
       },
@@ -142,12 +142,13 @@ const config = rc(name, {
   },
 })
 ;[
-  'markdownFooter',
-  'storyPath',
+  'babelConfig',
   'entryPoint',
-  'postcssConfig',
-  'jestConfig',
+  'markdownFooter',
   'picturebookPath',
+  'postcssConfig',
+  'storyPath',
+  'webpackConfig',
 ].forEach(key => {
   if (key in config) {
     config[key] = resolve(config.root, config[key])

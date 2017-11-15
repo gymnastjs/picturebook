@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "1.0.18",
+  "version": "1.0.28",
   "description": "Opinionated Storybook Setup",
   "main": "index.js",
   "repository": "https://github.com/obartra/picturebook",
@@ -9,7 +9,6 @@
   "bin": {
     "picturebook": "./picturebook.sh",
     "picturebook-build": "./picturebook-build.sh",
-    "picturebook-jest": "./picturebook-jest.sh",
     "picturebook-image": "./picturebook-image.sh"
   },
   "scripts": {
@@ -17,24 +16,14 @@
     "format": "prettier --write --single-quote --no-semi --trailing-comma es5"
   },
   "dependencies": {
-    "@storybook/addon-actions": "3.2.14",
-    "@storybook/addon-knobs": "3.2.14",
-    "@storybook/addon-notes": "3.2.14",
-    "@storybook/addon-options": "3.2.14",
-    "@storybook/addon-storyshots": "3.2.14",
-    "@storybook/channels": "3.2.14",
-    "@storybook/react": "3.2.14",
     "find-up": "2.1.0",
     "fs-extra": "4.0.2",
     "harmony-reflect": "1.5.1",
     "identity-obj-proxy": "3.0.0",
-    "jest": "21.2.1",
     "lodash": "4.17.4",
     "nightwatch": "0.9.16",
     "node-resemble-js": "0.2.0",
     "rc": "1.2.2",
-    "react": "16.0.0",
-    "react-dom": "16.0.0",
     "saucelabs": "1.4.0",
     "selenium-standalone": "6.11.0",
     "sharp": "0.18.4",
@@ -42,23 +31,19 @@
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-eslint": "8.0.1",
-    "babel-jest": "21.2.0",
-    "babel-plugin-flow-react-proptypes": "8.0.0",
-    "babel-plugin-lodash": "3.2.11",
-    "babel-plugin-module-resolver": "2.7.1",
+    "babel-eslint": "8.0.2",
+    "babel-plugin-lodash": "3.3.2",
+    "babel-plugin-module-resolver": "3.0.0",
     "babel-plugin-preval": "1.6.2",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-plugin-transform-runtime": "6.23.0",
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
     "babel-runtime": "6.26.0",
     "cssnano": "3.10.0",
-    "eslint": "4.10.0",
+    "eslint": "4.11.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-config-prettier": "2.7.0",
-    "eslint-plugin-flowtype": "2.39.1",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jsx-a11y": "6.0.2",
     "eslint-plugin-react": "7.4.0",
@@ -66,6 +51,16 @@
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-import": "11.0.0",
     "postcss-nesting": "4.2.1",
-    "prettier": "1.7.4"
+    "prettier": "1.8.2"
+  },
+  "peerDependencies": {
+    "@storybook/addon-actions": "3.x",
+    "@storybook/addon-knobs": "3.x",
+    "@storybook/addon-notes": "3.x",
+    "@storybook/addon-options": "3.x",
+    "@storybook/channels": "3.x",
+    "@storybook/react": "3.x",
+    "react": ">= 15.x",
+    "react-dom": ">= 15.x"
   }
 }

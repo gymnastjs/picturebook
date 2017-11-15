@@ -1,12 +1,11 @@
 const { resolve, join } = require('path')
-const { root, postcssConfig } = require('../params')
+const { root, postcssConfig, webpackConfig } = require('../params')
 
 module.exports = (baseConfig, env) => {
   const picturebookPath = resolve(root, 'node_modules/picturebook')
   const jsConfig = Object.assign(baseConfig.module.rules[0], {
     include: [
       ...baseConfig.module.rules[0].include,
-      // resolve(__dirname, '..'), // dev only
       picturebookPath,
     ],
     exclude: [join(picturebookPath, '/node_modules')],
@@ -20,7 +19,7 @@ module.exports = (baseConfig, env) => {
   baseConfig.module.rules = [
     jsConfig,
     {
-      test: /\.png$/,
+      test: /\.spec\.png$/,
       use: 'ignore-loader',
     },
     {
@@ -42,7 +41,6 @@ module.exports = (baseConfig, env) => {
       test: /\.css$/,
       include: [
         root,
-        // resolve(__dirname, '..'), // dev only
         picturebookPath,
       ],
       use: [
@@ -67,6 +65,10 @@ module.exports = (baseConfig, env) => {
       ],
     },
   ]
+
+  if (webpackConfig) {
+    return require(webpackConfig)(baseConfig, env);
+  }
 
   return baseConfig
 }

@@ -14,8 +14,7 @@ function getNote(files, filepath, loader) {
   const hasMd = files.indexOf(mdFile) !== -1
   const url = filepath.replace('./', storiesUrl)
   const note = hasMd ? loader(mdFile).default || loader(mdFile) : ''
-  const footer =
-    require(preval`module.exports=require('../../params').markdownFooter`) || ''
+  const footer = require(preval`module.exports=require('../../params').markdownFooter`) || ''
 
   return `${note}${footer.replace('[[url]]', url)}`
 }

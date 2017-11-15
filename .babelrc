@@ -1,28 +1,3 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "targets": {
-          "browsers": ["last 2 versions", "ie >= 11"]
-        }
-      }
-    ],
-    "react"
-  ],
-  "plugins": [
-    "preval",
-    "flow-react-proptypes",
-    "lodash",
-    "transform-object-rest-spread",
-    "transform-class-properties",
-    [
-      "transform-runtime",
-      {
-        "helpers": false,
-        "polyfill": false,
-        "regenerator": false
-      }
-    ]
-  ]
+  "presets": ["./shared/babelrc.js"]
 }

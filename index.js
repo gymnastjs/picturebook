@@ -1,18 +1,10 @@
-// @flow
 import * as React from 'react'
 import { each } from 'lodash'
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { storyFolders, WithExtensions } from './shared'
 
-type Component =
-  | {
-      displayName?: string,
-      name?: string,
-    }
-  | Function
-
-function getDisplayName(WrappedComponent: string | Component): string {
+function getDisplayName(WrappedComponent) {
   const defaultName = 'Component'
 
   if (typeof WrappedComponent !== 'string') {
@@ -26,16 +18,16 @@ function getDisplayName(WrappedComponent: string | Component): string {
  * storyFolders dynamically fetches all files within `/stories`
  */
 
-function unwrapDisplayNameFromHOC(name: string = '') {
+function unwrapDisplayNameFromHOC(name = '') {
   return (name.match(/(?:\(([^()]+)\))/) || [])[1] || name
 }
 
-function configStories(storiesOfName: string, storiesModule: typeof module) {
+function configStories(storiesOfName, storiesModule) {
   const stories = storiesOf(storiesOfName, storiesModule)
 
   stories.addDecorator(withKnobs)
 
-  const addStoryWithJSX = (storyName: string, ComponentFn: () => any) =>
+  const addStoryWithJSX = (storyName, ComponentFn) =>
     stories.addWithJSX(storyName, ComponentFn, {
       showDefaultProps: false,
       useBooleanShorthandSyntax: true,
@@ -52,11 +44,7 @@ function configStories(storiesOfName: string, storiesModule: typeof module) {
 function addStory({ story: WrappedComponent, notes, name }, component) {
   component.add(name, () => (
     <WithExtensions notes={notes}>
-      {typeof WrappedComponent === 'function' ? (
-        WrappedComponent()
-      ) : (
-        <WrappedComponent />
-      )}
+      <WrappedComponent />
     </WithExtensions>
   ))
 }

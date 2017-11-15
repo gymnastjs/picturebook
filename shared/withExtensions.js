@@ -1,14 +1,8 @@
-// @flow
 import * as React from 'react'
 import { WithNotes } from '@storybook/addon-notes'
 import style from './ci.css'
 
-type Props = {
-  notes?: string,
-  className?: string,
-}
-
-export default function WithExtensions({ notes, className, ...props }: Props) {
+export default function WithExtensions({ notes, className, ...props }) {
   const isCI = window.location.href.indexOf('isCI') !== -1
   const classCI = isCI ? style.isCI : undefined
 

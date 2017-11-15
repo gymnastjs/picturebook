@@ -1,7 +1,7 @@
 import initStoryshots from '@storybook/addon-storyshots'
-import { picturebookPath } from './params'
+import params from './params'
 
 initStoryshots({
   framework: 'react',
-  configPath: `${picturebookPath}/config`,
+  configPath: `${params.picturebookPath}/config`,
 })

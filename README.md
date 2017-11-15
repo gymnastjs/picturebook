@@ -9,7 +9,7 @@ Simplify Storybook story creation and cross-browser image comparison testing
 Install with:
 
 ```sh
-$ yarn add --dev picturebook
+$ yarn add --dev picturebook @storybook/addon-actions @storybook/addon-knobs @storybook/addon-notes @storybook/addon-options @storybook/channels @storybook/react
 ```
 
 Configure it creating `.picturebookrc` file on your root directory. The following are the default values:
@@ -23,7 +23,8 @@ Configure it creating `.picturebookrc` file on your root directory. The followin
   "entryPoint": "node_modules/picturebook/index.js",
   "markdownFooter": "node_modules/picturebook/shared/storyFolders/footer.md",
   "postcssConfig": "",
-  "jestConfig": "",
+  "babelConfig": "",
+  "webpackConfig": "",
   "picturebookPath": "node_modules/picturebook",
   "root": ".",
   "browsers": {
@@ -38,7 +39,7 @@ Configure it creating `.picturebookrc` file on your root directory. The followin
 - **storyPath**: The path, from the project root, to the stories
 - **entryPoint**: The stories entry point (it should import `picturebook`)
 - **markdownFooter**: The markdown footer applied to all stories. The keyword `[[url]]` is translated to the specific story url if `storiesUrl` is specified.
-- **postcssConfig**: A path to a file exporting either a plain object that returns a postcss config.
+- **postcssConfig**: A path to a file exporting either a plain object that returns a postcss config. This is a convenience method in case you don't need to customize other webpack settings. If you want full control on how css is loaded, you can do so by modifying the `webpackConfig` parameter. It expects the same format than storybook (a function that will receive the default config as first parameter and the environment as the second one)
 
 ## ✏️ Usage
 
@@ -48,8 +49,8 @@ Simply specify a `storyPath` on your config (e.g. `src/stories`) and PictureBook
 
 Documentation is added to each story if there's a matching file with the same name but with `md` extension.
 
-To add actions (using `@storybook/addon-actions`) import `picturebook/actions`.
+To add actions (using `@storybook/addon-actions`) follow [these usage instructions](https://github.com/storybooks/storybook/tree/master/addons/actions).
 
-To add knobs (using `@storybook/addon-knobs`) import `picturebook/knobs`.
+To add knobs (using `@storybook/addon-knobs`) follow [these usage instructions](https://github.com/storybooks/storybook/tree/master/addons/knobs).
 
 To run unit automated snapshots on your stories, create a test file importing `picturebook/screenshot`.
