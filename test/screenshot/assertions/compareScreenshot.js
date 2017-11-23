@@ -75,12 +75,14 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
     const pass = value <= this.expected
 
     if (pass === true) {
-      this.message = `Screenshots Matched for ${filename} with a tolerance of ${this
-        .expected}%.`
+      this.message = `Screenshots Matched for ${filename} with a tolerance of ${
+        this.expected
+      }%.`
     } else if (pass === false) {
       this.message =
-        `Screenshots Match Failed for ${filename} with a tolerance of ${this
-          .expected}%.\n` +
+        `Screenshots Match Failed for ${filename} with a tolerance of ${
+          this.expected
+        }%.\n` +
         `   Screenshots at:\n` +
         `    Baseline: ${baselinePath}\n` +
         `    Result: ${resultPath}\n` +

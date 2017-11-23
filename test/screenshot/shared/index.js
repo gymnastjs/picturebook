@@ -1,9 +1,6 @@
 const { find } = require('lodash')
 const { browsers } = require('../../../params')
 
-const isCIMaster = process.env.CI && process.env.CIRCLE_BRANCH === 'master'
-const suffix = isCIMaster ? '_MASTER' : ''
-
 function getBrowserData(browserName) {
   const match = find(
     browsers,
@@ -20,8 +17,5 @@ function getBrowserData(browserName) {
 }
 
 module.exports = {
-  isCIMaster,
   getBrowserData,
-  username: process.env[`SAUCE_USERNAME${suffix}`],
-  accessKey: process.env[`SAUCE_ACCESS_KEY${suffix}`],
 }

@@ -3,27 +3,27 @@ const { readFileSync } = require('fs')
 const { babelConfig } = require('../params')
 
 let config = {
-  "presets": [
+  presets: [
     [
-      "env",
+      'env',
       {
-        "targets": {
-          "browsers": ["last 2 versions", "ie >= 11"]
-        }
-      }
+        targets: {
+          browsers: ['last 2 versions', 'ie >= 11'],
+        },
+      },
     ],
-    "react"
+    'react',
   ],
-  "plugins": [
-    "preval",
-    "lodash",
-    "transform-object-rest-spread",
-    "transform-class-properties",
-  ]
+  plugins: [
+    'preval',
+    'lodash',
+    'transform-object-rest-spread',
+    'transform-class-properties',
+  ],
 }
 
 if (babelConfig) {
-  config = JSON.parse(readFileSync(babelConfig, "utf8"));
+  config = JSON.parse(readFileSync(babelConfig, 'utf8'))
 }
 
 module.exports = config

@@ -1,6 +1,7 @@
 const { flattenDeep } = require('lodash')
 const { getBrowserData } = require('../shared')
-const { storyFolders } = require('picturebook/shared/storyFolders')
+const { storyFolders } = require('../../../shared/storyFolders')
+const { skip } = require('../../../params')
 
 const targetUrlIndex = process.argv.indexOf('--url')
 
@@ -13,6 +14,31 @@ function getStories(content) {
   return Object.values(content).map(getStories)
 }
 
+function isPartialMatch(reference, partial) {
+  return reference.toLowerCase().includes(partial.toLowerCase())
+}
+
+function partialSkipMatch(props) {
+  const { name, folderpath } = props
+
+  return !skip.some(
+    match => isPartialMatch(name, match) || isPartialMatch(folderpath, match)
+  )
+}
+
+function formatProperties(props) {
+  const { folderpath, name, image, mobile } = props
+
+  return {
+    label: `${folderpath}__${name}`,
+    image,
+    mobile,
+    url: `${BASE_URL}?selectedKind=${encodeURIComponent(
+      folderpath
+    )}&selectedStory=${encodeURIComponent(name)}&isCI`,
+  }
+}
+
 const scenarios = Object.keys(storyFolders)
   .map(kind => ({
     kind,
@@ -21,18 +47,7 @@ const scenarios = Object.keys(storyFolders)
   .reduce(
     (prev, story) =>
       prev.concat(
-        story.storyNames.map(props => {
-          const { folderpath, name, image, mobile } = props
-
-          return {
-            label: `${folderpath}__${name}`,
-            image,
-            mobile,
-            url: `${BASE_URL}?selectedKind=${encodeURIComponent(
-              folderpath
-            )}&selectedStory=${encodeURIComponent(name)}&isCI`,
-          }
-        })
+        story.storyNames.filter(partialSkipMatch).map(formatProperties)
       ),
     []
   )
@@ -57,7 +72,7 @@ function storyBookImageComparison(browser) {
             ),
         browser
       )
-      .sauceEnd()
+      .seleniumEnd()
       .end()
   )
 }

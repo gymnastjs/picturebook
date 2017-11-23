@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "Opinionated Storybook Setup",
   "main": "index.js",
   "repository": "https://github.com/obartra/picturebook",
@@ -12,10 +12,13 @@
     "picturebook-image": "./picturebook-image.sh"
   },
   "scripts": {
-    "format-all": "git ls-files {config,}*.{js,css} | xargs yarn format",
+    "format-all": "git ls-files {config,shared,test}*.{js,css} | xargs yarn format",
     "format": "prettier --write --single-quote --no-semi --trailing-comma es5"
   },
   "dependencies": {
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.0",
+    "cosmiconfig": "3.1.0",
     "find-up": "2.1.0",
     "fs-extra": "4.0.2",
     "harmony-reflect": "1.5.1",
@@ -23,14 +26,13 @@
     "lodash": "4.17.4",
     "nightwatch": "0.9.16",
     "node-resemble-js": "0.2.0",
-    "rc": "1.2.2",
     "saucelabs": "1.4.0",
+    "selenium-server-standalone-jar": "3.7.1",
     "selenium-standalone": "6.11.0",
     "sharp": "0.18.4",
     "storybook-addon-jsx": "5.0.0"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
     "babel-eslint": "8.0.2",
     "babel-plugin-lodash": "3.3.2",
     "babel-plugin-module-resolver": "3.0.0",
@@ -43,10 +45,10 @@
     "cssnano": "3.10.0",
     "eslint": "4.11.0",
     "eslint-config-airbnb": "16.1.0",
-    "eslint-config-prettier": "2.7.0",
+    "eslint-config-prettier": "2.8.0",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jsx-a11y": "6.0.2",
-    "eslint-plugin-react": "7.4.0",
+    "eslint-plugin-react": "7.5.1",
     "postcss-cssnext": "3.0.2",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-import": "11.0.0",

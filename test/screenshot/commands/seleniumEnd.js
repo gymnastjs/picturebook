@@ -1,10 +1,10 @@
-const { username, accessKey } = require('../shared')
+const { image } = require('../../../params')
 const SauceLabs = require('saucelabs')
 
-exports.command = function command(callback) {
+exports.command = function seleniumEnd(callback) {
   const saucelabs = new SauceLabs({
-    username,
-    password: accessKey,
+    username: image.username,
+    password: image.accessKey,
   })
   const sessionId = this.capabilities['webdriver.remote.sessionid']
   const { name } = this.currentTest

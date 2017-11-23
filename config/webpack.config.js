@@ -4,10 +4,7 @@ const { root, postcssConfig, webpackConfig } = require('../params')
 module.exports = (baseConfig, env) => {
   const picturebookPath = resolve(root, 'node_modules/picturebook')
   const jsConfig = Object.assign(baseConfig.module.rules[0], {
-    include: [
-      ...baseConfig.module.rules[0].include,
-      picturebookPath,
-    ],
+    include: [...baseConfig.module.rules[0].include, picturebookPath],
     exclude: [join(picturebookPath, '/node_modules')],
   })
   baseConfig.node = {
@@ -39,10 +36,7 @@ module.exports = (baseConfig, env) => {
     },
     {
       test: /\.css$/,
-      include: [
-        root,
-        picturebookPath,
-      ],
+      include: [root, picturebookPath],
       use: [
         'style-loader',
         {
@@ -67,7 +61,7 @@ module.exports = (baseConfig, env) => {
   ]
 
   if (webpackConfig) {
-    return require(webpackConfig)(baseConfig, env);
+    return require(webpackConfig)(baseConfig, env)
   }
 
   return baseConfig
