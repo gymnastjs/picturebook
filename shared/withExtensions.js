@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { WithNotes } from '@storybook/addon-notes'
-import style from './ci.css'
 
-export default function WithExtensions({ notes, className, ...props }) {
+export default function WithExtensions({ notes, className = '', ...props }) {
   const isCI = window.location.href.indexOf('isCI') !== -1
-  const classCI = isCI ? style.isCI : undefined
+  const classes = isCI ? ['isCI', className] : [className]
+  const classesStr = classes.join(' ')
 
   if (notes) {
     return (
       <div>
         <WithNotes notes={notes}>
-          <div {...props} className={classCI} />
+          <div {...props} className={classesStr} />
         </WithNotes>
       </div>
     )
@@ -18,7 +18,7 @@ export default function WithExtensions({ notes, className, ...props }) {
 
   return (
     <div>
-      <div {...props} className={classCI} />
+      <div {...props} className={classesStr} />
     </div>
   )
 }
