@@ -1,4 +1,5 @@
 const resemblejs = require('node-resemble-js')
+const { some } = require('lodash')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')
@@ -31,6 +32,19 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
   const resultPath = `${screenshotPath}/results/${browserName}-${filename}`
   const diffPath = `${screenshotPath}/diffs/${browserName}-${filename}`
 
+  function updateBaseline({message}) {
+    if (
+      (platform === 'desktop' && browserName === 'chrome') ||
+      (platform === 'mobile' && browserName === 'iphone7')
+    ) {
+      if (message) {
+        process.stdout.write(message)
+      }
+      
+      fs.writeFileSync(baselinePath, fs.readFileSync(resultPath))
+    }
+  }
+
   this.message = 'Unexpected compareScreenshot error.'
   this.expected = browserName === 'chrome' ? 0 : 3.7 // misMatchPercentage tolerance 3.0% for non chrome
 
@@ -42,13 +56,9 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
     // create new baseline photo if none exists
     if (!fs.existsSync(baselinePath)) {
       // baseline is chrome for desktop, iphone for mobile
-      if (
-        (platform === 'desktop' && browserName === 'chrome') ||
-        (platform === 'mobile' && browserName === 'iphone7')
-      ) {
-        process.stdout.write('Image did not exist, updating test...\n')
-        fs.writeFileSync(baselinePath, fs.readFileSync(resultPath))
-      }
+      
+
+      updateBaseline({ message: 'Image did not exist, updating test...\n'})
     }
 
     if (fs.existsSync(baselinePath)) {
@@ -72,21 +82,25 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
   }
 
   this.pass = function passFn(value) {
-    const pass = value <= this.expected
+    let pass = value <= this.expected
+    
+    if (pass === false && some(['-u', '--updateScreenshot'], flag => process.argv.indexOf(flag) > -1)) {
+      updateBaseline()
+      this.message = `Updating screenshot at ${baselinePath}\n`
+      fs.writeFileSync(baselinePath, fs.readFileSync(resultPath))
 
-    if (pass === true) {
-      this.message = `Screenshots Matched for ${filename} with a tolerance of ${
-        this.expected
-      }%.`
+      pass = true
+    } else if (pass === true) {
+      this.message = `Screenshots Matched for ${filename} with a tolerance of ${this
+        .expected}%.`
     } else if (pass === false) {
-      this.message =
-        `Screenshots Match Failed for ${filename} with a tolerance of ${
-          this.expected
-        }%.\n` +
+      this.message = 
+        `Screenshots Match Failed for ${filename} with a tolerance of ${this
+          .expected}%.\n` +
         `   Screenshots at:\n` +
-        `    Baseline: ${baselinePath}\n` +
-        `    Result: ${resultPath}\n` +
-        `    Diff: ${diffPath}\n` +
+        `      Baseline: ${baselinePath}\n` +
+        `      Result: ${resultPath}\n` +
+        `      Diff: ${diffPath}\n` +
         `   Open ${diffPath} to see how the screenshot has changed.\n` +
         `   If the Result Screenshot is correct you can use it to update the Baseline Screenshot and re-run your test:\n` +
         `    cp ${resultPath} ${baselinePath}`

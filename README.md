@@ -66,4 +66,17 @@ To add actions (using `@storybook/addon-actions`) follow [these usage instructio
 
 To add knobs (using `@storybook/addon-knobs`) follow [these usage instructions](https://github.com/storybooks/storybook/tree/master/addons/knobs).
 
-To run unit automated snapshots on your stories, create a test file importing `picturebook/screenshot`.
+## 📸 Screenshot Testing
+
+To run automated screenshot tests, run `./node_modules/.bin/picturebook-image`
+
+### Available Flags:
+
+**--env**: Define which browsers should be tested (`chrome`, `firefox`, etc)
+
+**--suiteRetries**: How many times to retry all tests if a screenshot fails due to flaky connection
+
+**-u** or **--updateScreenshot**: Update and replace baselines images for all failing tests
+
+
+
