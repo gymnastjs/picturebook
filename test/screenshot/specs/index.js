@@ -1,7 +1,9 @@
 const { flattenDeep } = require('lodash')
 const { getBrowserData } = require('../shared')
-const { storyFolders } = require('../../../shared/storyFolders')
-const { skip } = require('../../../params')
+const { loadTest } = require('../../../shared/storyFolders/test')
+const { skip, storyPath } = require('../../../params')
+
+const storyFolders = loadTest(storyPath)
 
 const targetUrlIndex = process.argv.indexOf('--url')
 
