@@ -1,4 +1,5 @@
 const { resolve, join } = require('path')
+const webpack = require('webpack')
 const { root, postcssConfig, webpackConfig } = require('../params')
 
 module.exports = (baseConfig, env) => {
@@ -7,6 +8,11 @@ module.exports = (baseConfig, env) => {
     include: [...baseConfig.module.rules[0].include, picturebookPath],
     exclude: [join(picturebookPath, '/node_modules')],
   })
+
+  const ignoreContextRegex = new RegExp(picturebookPath + '/shared/storyFolders')
+
+  baseConfig.plugins.push(new webpack.IgnorePlugin(/test/, ignoreContextRegex))
+
   baseConfig.node = {
     fs: 'empty',
   }

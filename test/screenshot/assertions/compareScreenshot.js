@@ -32,7 +32,7 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
   const resultPath = `${screenshotPath}/results/${browserName}-${filename}`
   const diffPath = `${screenshotPath}/diffs/${browserName}-${filename}`
 
-  function updateBaseline({message}) {
+  function updateBaseline({ message } = {}) {
     if (
       (platform === 'desktop' && browserName === 'chrome') ||
       (platform === 'mobile' && browserName === 'iphone7')
@@ -40,7 +40,7 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
       if (message) {
         process.stdout.write(message)
       }
-      
+
       fs.writeFileSync(baselinePath, fs.readFileSync(resultPath))
     }
   }
@@ -56,9 +56,8 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
     // create new baseline photo if none exists
     if (!fs.existsSync(baselinePath)) {
       // baseline is chrome for desktop, iphone for mobile
-      
 
-      updateBaseline({ message: 'Image did not exist, updating test...\n'})
+      updateBaseline({ message: 'Image did not exist, updating test...\n' })
     }
 
     if (fs.existsSync(baselinePath)) {
@@ -83,20 +82,27 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
 
   this.pass = function passFn(value) {
     let pass = value <= this.expected
-    
-    if (pass === false && some(['-u', '--updateScreenshot'], flag => process.argv.indexOf(flag) > -1)) {
+
+    if (
+      pass === false &&
+      some(
+        ['-u', '--updateScreenshot'],
+        flag => process.argv.indexOf(flag) > -1
+      )
+    ) {
       updateBaseline()
       this.message = `Updating screenshot at ${baselinePath}\n`
-      fs.writeFileSync(baselinePath, fs.readFileSync(resultPath))
 
       pass = true
     } else if (pass === true) {
-      this.message = `Screenshots Matched for ${filename} with a tolerance of ${this
-        .expected}%.`
+      this.message = `Screenshots Matched for ${filename} with a tolerance of ${
+        this.expected
+      }%.`
     } else if (pass === false) {
-      this.message = 
-        `Screenshots Match Failed for ${filename} with a tolerance of ${this
-          .expected}%.\n` +
+      this.message =
+        `Screenshots Match Failed for ${filename} with a tolerance of ${
+          this.expected
+        }%.\n` +
         `   Screenshots at:\n` +
         `      Baseline: ${baselinePath}\n` +
         `      Result: ${resultPath}\n` +
