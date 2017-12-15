@@ -1,8 +1,16 @@
+/* eslint-disable import/no-dynamic-require */
 import * as React from 'react'
 import { each } from 'lodash'
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { storyFolders, WithExtensions } from './shared'
+
+let wrapStory = require(preval`
+  const params = require('./params')
+  module.exports = params.wrapStory || 'lodash/identity'
+`)
+
+wrapStory = wrapStory.default || wrapStory
 
 function getDisplayName(WrappedComponent) {
   const defaultName = 'Component'
@@ -41,12 +49,16 @@ function configStories(storiesOfName, storiesModule) {
   }
 }
 
-function addStory({ story: WrappedComponent, notes, name }, component) {
-  component.add(name, () => (
-    <WithExtensions notes={notes}>
-      <WrappedComponent />
-    </WithExtensions>
-  ))
+function addStory({ story: Story, notes, name }, component) {
+  component.add(name, () => {
+    const wrappedComponent = (
+      <WithExtensions notes={notes}>
+        <Story />
+      </WithExtensions>
+    )
+
+    return wrapStory(wrappedComponent)
+  })
 }
 
 const components = {}

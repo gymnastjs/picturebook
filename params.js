@@ -157,6 +157,7 @@ const config = Object.assign({}, {
   'picturebookPath',
   'postcssConfig',
   'storyPath',
+  'wrapStory',
   'webpackConfig',
 ].forEach(key => {
   if (key in config) {

@@ -51,8 +51,10 @@ Configure it creating `.picturebookrc` file on your root directory. The followin
 - **image**: It's a required configuration object to run the image comparison tests
 - **seleniumPath**: Modify to use a custom selenium server jar
 - **skip**: A case insensitive array of string to match partially with tests to skip
+- **wrapStory**: Path to an ES module that default exports a function that takes a story, and returns a wrapped version of that story. Useful for applying context providers that stories may depend on, or otherwise augmenting each story.
 
 Configuration is parsed with [cosmiconfig](https://github.com/davidtheclark/cosmiconfig)
+
 
 ## ✏️ Usage
 
