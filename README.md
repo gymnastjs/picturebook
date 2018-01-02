@@ -27,6 +27,10 @@ Configure it creating `.picturebookrc` file on your root directory. The followin
   "babelConfig": "",
   "webpackConfig": "",
   "seleniumPath": "", // defaults to internal copy of the selenium jar file
+  "desktopReferenceBrowser": "chrome",
+  "mobileReferenceBrowser": "iphone7",
+  "referenceThreshold": 0,
+  "browserThreshold": 3.7,
   "picturebookPath": "node_modules/picturebook",
   "root": ".",
   "image": {
@@ -50,6 +54,10 @@ Configure it creating `.picturebookrc` file on your root directory. The followin
 - **postcssConfig**: A path to a file exporting either a plain object that returns a postcss config. This is a convenience method in case you don't need to customize other webpack settings. If you want full control on how css is loaded, you can do so by modifying the `webpackConfig` parameter. It expects the same format than storybook (a function that will receive the default config as first parameter and the environment as the second one)
 - **image**: It's a required configuration object to run the image comparison tests
 - **seleniumPath**: Modify to use a custom selenium server jar
+- **desktopReferenceBrowser**: The browser to use as reference for desktop screenshots. The key must match one of the ones defined by `browsers`.
+- **desktopReferenceBrowser**: The browser to use as reference for mobile screenshots. The key must match one of the ones defined by `browsers`.
+- **referenceThreshold**: The tolerance threshold for screenshots taken on the reference browser
+- **browserThreshold**: The tolerance threshold for screenshots taken on a non-reference browser
 - **skip**: A case insensitive array of string to match partially with tests to skip
 - **wrapStory**: Path to an ES module that default exports a function that takes a story, and returns a wrapped version of that story. Useful for applying context providers that stories may depend on, or otherwise augmenting each story.
 

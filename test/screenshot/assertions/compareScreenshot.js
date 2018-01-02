@@ -4,6 +4,7 @@ const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')
 const { getBrowserData } = require('../shared')
+const { desktopReferenceBrowser, mobileReferenceBrowser, referenceThreshold, browserThreshold } = require('../../../params')
 
 function makeDir(dirPath) {
   return mkdirp.sync(dirPath)
@@ -34,8 +35,8 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
 
   function updateBaseline({ message } = {}) {
     if (
-      (platform === 'desktop' && browserName === 'chrome') ||
-      (platform === 'mobile' && browserName === 'iphone7')
+      (platform === 'desktop' && browserName === desktopReferenceBrowser) ||
+      (platform === 'mobile' && browserName === mobileReferenceBrowser)
     ) {
       if (message) {
         process.stdout.write(message)
@@ -46,7 +47,7 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
   }
 
   this.message = 'Unexpected compareScreenshot error.'
-  this.expected = browserName === 'chrome' ? 0 : 3.7 // misMatchPercentage tolerance 3.0% for non chrome
+  this.expected = browserName === desktopReferenceBrowser ? referenceThreshold : browserThreshold
 
   this.command = callback => {
     makeDir(path.dirname(resultPath))
@@ -55,7 +56,7 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
 
     // create new baseline photo if none exists
     if (!fs.existsSync(baselinePath)) {
-      // baseline is chrome for desktop, iphone for mobile
+      // baseline is desktopReferenceBrowser for desktop, mobileReferenceBrowser for mobile
 
       updateBaseline({ message: 'Image did not exist, updating test...\n' })
     }
