@@ -35,7 +35,7 @@ function formatProperties(props) {
     mobile,
     url: `${BASE_URL}?selectedKind=${encodeURIComponent(
       folderpath
-    )}&selectedStory=${encodeURIComponent(name)}&isCI`,
+    )}&selectedStory=${encodeURIComponent(name)}`,
   }
 }
 
@@ -64,6 +64,9 @@ function storyBookImageComparison(browser) {
         (b, { url, label, image, mobile }) =>
           b
             .url(url)
+            .execute(
+              `document.querySelector('[data-picturebook-test-id="root"]').className += ' isCI'`
+            )
             .compareScreenshot(
               `${label}${isMobile ? '_mobile' : ''}.png`,
               isMobile ? mobile : image,
