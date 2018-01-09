@@ -3,7 +3,7 @@ const { dirname, resolve, join } = require('path')
 const findUp = require('find-up')
 const cosmiconfig = require('cosmiconfig')
 const { name } = require('./package.json')
-const browsers = require('./browsers').default
+const browsers = require('./browsers')
 const seleniumPath = require('selenium-server-standalone-jar').path;
 
 const root = dirname(findUp.sync('package.json'))
@@ -26,7 +26,7 @@ const config = Object.assign({}, {
   mobileReferenceBrowser: 'iphone7',
   referenceThreshold: 0,
   browserThreshold: 3.7,
-  browsers,
+  browsers: 'default' in browsers ? browsers.default : browsers,
 }, explorer.load('.').config)
 
 ;[
