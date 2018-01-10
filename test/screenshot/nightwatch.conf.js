@@ -35,6 +35,7 @@ const commonSettings = {
   screenshots: {
     enabled: false,
   },
+  proxy: image.proxy,
   desiredCapabilities,
 }
 

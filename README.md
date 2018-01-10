@@ -16,32 +16,33 @@ Configure it creating `.picturebookrc` file on your root directory. The followin
 
 ```js
 {
-  "projectName": "PictureBook",
-  "projectUrl": "https://github.com/obartra/picturebook",
-  "storiesUrl": "",
-  "skip": [],
-  "storyPath": "",
-  "entryPoint": "node_modules/picturebook/index.js",
-  "markdownFooter": "node_modules/picturebook/shared/storyFolders/footer.md",
-  "postcssConfig": "",
   "babelConfig": "",
-  "webpackConfig": "",
-  "seleniumPath": "", // defaults to internal copy of the selenium jar file
-  "desktopReferenceBrowser": "chrome",
-  "mobileReferenceBrowser": "iphone7",
-  "referenceThreshold": 0,
-  "browserThreshold": 3.7,
-  "picturebookPath": "node_modules/picturebook",
-  "root": ".",
-  "image": {
-    "local": false,
-    "username: "",
-    "accessKey": "",
-    "desiredCapabilities": {}
-  },
   "browsers": {
     /* chrome, ie11, edge, ff, safari, iphone7, galaxy4 */
   }
+  "browserThreshold": 3.7,
+  "desktopReferenceBrowser": "chrome",
+  "entryPoint": "node_modules/picturebook/index.js",
+  "image": {
+    "accessKey": "",
+    "desiredCapabilities": {},
+    "local": false,
+    "proxy": undefined,
+    "username": ""
+  },
+  "markdownFooter": "node_modules/picturebook/shared/storyFolders/footer.md",
+  "mobileReferenceBrowser": "iphone7",
+  "picturebookPath": "node_modules/picturebook",
+  "postcssConfig": "",
+  "projectName": "PictureBook",
+  "projectUrl": "https://github.com/obartra/picturebook",
+  "referenceThreshold": 0,
+  "root": ".",
+  "seleniumPath": "", // defaults to internal copy of the selenium jar file
+  "skip": [],
+  "storiesUrl": "",
+  "storyPath": "",
+  "webpackConfig": "",
 }
 ```
 
@@ -52,7 +53,7 @@ Configure it creating `.picturebookrc` file on your root directory. The followin
 - **entryPoint**: The stories entry point (it should import `picturebook`)
 - **markdownFooter**: The markdown footer applied to all stories. The keyword `[[url]]` is translated to the specific story url if `storiesUrl` is specified.
 - **postcssConfig**: A path to a file exporting either a plain object that returns a postcss config. This is a convenience method in case you don't need to customize other webpack settings. If you want full control on how css is loaded, you can do so by modifying the `webpackConfig` parameter. It expects the same format than storybook (a function that will receive the default config as first parameter and the environment as the second one)
-- **image**: It's a required configuration object to run the image comparison tests
+- **image**: It's a required configuration object to run the image comparison tests. Passes the specified configuration options to nightwatch
 - **seleniumPath**: Modify to use a custom selenium server jar
 - **desktopReferenceBrowser**: The browser to use as reference for desktop screenshots. The key must match one of the ones defined by `browsers`.
 - **desktopReferenceBrowser**: The browser to use as reference for mobile screenshots. The key must match one of the ones defined by `browsers`.

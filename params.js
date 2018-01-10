@@ -13,20 +13,26 @@ const explorer = cosmiconfig(name, {
   sync: true
 })
 const config = Object.assign({}, {
+  browsers: 'default' in browsers ? browsers.default : browsers,
+  browserThreshold: 3.7,
+  desktopReferenceBrowser: 'chrome',
   entryPoint: join(picturebookPath, 'index.js'),
-  image: {},
+  image: {
+    accessKey: '',
+    desiredCapabilities: {},
+    local: false,
+    proxy: undefined,
+    username: '',
+  },
   markdownFooter: join(picturebookPath, 'shared/storyFolders/footer.md'),
+  mobileReferenceBrowser: 'iphone7',
   picturebookPath,
   projectName: 'PictureBook',
-  skip: [],
   projectUrl: 'https://github.com/obartra/picturebook',
+  referenceThreshold: 0,
   root,
   seleniumPath,
-  desktopReferenceBrowser: 'chrome',
-  mobileReferenceBrowser: 'iphone7',
-  referenceThreshold: 0,
-  browserThreshold: 3.7,
-  browsers: 'default' in browsers ? browsers.default : browsers,
+  skip: [],
 }, explorer.load('.').config)
 
 ;[
