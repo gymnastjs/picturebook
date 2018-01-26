@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Opinionated Storybook Setup",
   "main": "index.js",
   "repository": "https://github.com/obartra/picturebook",
@@ -29,6 +29,7 @@
     "fs-extra": "5.0.0",
     "harmony-reflect": "1.5.1",
     "identity-obj-proxy": "3.0.0",
+    "kcd-scripts": "^0.30.4",
     "lodash": "4.17.4",
     "nightwatch": "0.9.19",
     "node-resemble-js": "0.2.0",
