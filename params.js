@@ -8,10 +8,15 @@ const seleniumPath = require('selenium-server-standalone-jar').path;
 
 const root = dirname(findUp.sync('package.json'))
 const picturebookPath = 'node_modules/picturebook/'
-const explorer = cosmiconfig(name, {
+let explorer = cosmiconfig(name, {
   cache: false,
   sync: true
-})
+}).load(__dirname)
+
+if (!explorer) {
+  explorer = { config: {}}
+}
+
 const config = Object.assign({}, {
   browsers: 'default' in browsers ? browsers.default : browsers,
   browserThreshold: 3.7,
@@ -33,7 +38,7 @@ const config = Object.assign({}, {
   root,
   seleniumPath,
   skip: [],
-}, explorer.load('.').config)
+}, explorer.config)
 
 ;[
   'babelConfig',

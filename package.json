@@ -1,15 +1,15 @@
 {
   "name": "picturebook",
-  "version": "1.1.9",
+  "version": "1.2.1",
   "description": "Opinionated Storybook Setup",
   "main": "index.js",
   "repository": "https://github.com/obartra/picturebook",
   "author": "Oscar Bartra",
   "license": "MIT",
   "bin": {
-    "picturebook": "./picturebook.sh",
-    "picturebook-build": "./picturebook-build.sh",
-    "picturebook-image": "./picturebook-image.sh"
+    "picturebook": "./bin/picturebook.js",
+    "picturebook-build": "./bin/picturebook-build.js",
+    "picturebook-image": "./bin/picturebook-image.js"
   },
   "scripts": {
     "format-all": "git ls-files {config,shared,test}*.{js,css} | xargs yarn format",
@@ -56,12 +56,12 @@
     "prettier": "1.9.2"
   },
   "peerDependencies": {
+    "@storybook/react": "3.x",
     "@storybook/addon-actions": "3.x",
     "@storybook/addon-knobs": "3.x",
     "@storybook/addon-notes": "3.x",
     "@storybook/addon-options": "3.x",
     "@storybook/channels": "3.x",
-    "@storybook/react": "3.x",
     "react": ">= 15.x",
     "react-dom": ">= 15.x"
   }
