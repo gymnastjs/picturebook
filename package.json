@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "1.2.1",
+  "version": "1.2.4",
   "description": "Opinionated Storybook Setup",
   "main": "index.js",
   "repository": "https://github.com/obartra/picturebook",
@@ -56,12 +56,12 @@
     "prettier": "1.9.2"
   },
   "peerDependencies": {
-    "@storybook/react": "3.x",
     "@storybook/addon-actions": "3.x",
     "@storybook/addon-knobs": "3.x",
     "@storybook/addon-notes": "3.x",
     "@storybook/addon-options": "3.x",
     "@storybook/channels": "3.x",
+    "@storybook/react": "3.x",
     "react": ">= 15.x",
     "react-dom": ">= 15.x"
   }

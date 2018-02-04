@@ -1,5 +1,6 @@
 /* eslint-disable */
 const { resolve } = require('path')
+const { spawnSync } = require('child_process');
 
 const pictureDir = resolve(__dirname, '../')
 const configDir = resolve(pictureDir, 'config')
@@ -25,7 +26,10 @@ module.exports = {
     require('@storybook/react/dist/server/build')
   },
   image() {
-    process.argv.push('--config ', nightwatchDir)
-    require('nightwatch/runner.js')
+    const params = ['--config', nightwatchDir].concat(process.argv.slice(2))
+
+    spawnSync('./node_modules/.bin/nightwatch', params, {
+      stdio: 'pipe'
+    })
   }
 }
