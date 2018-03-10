@@ -4,7 +4,12 @@ const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')
 const { getBrowserData } = require('../shared')
-const { desktopReferenceBrowser, mobileReferenceBrowser, referenceThreshold, browserThreshold } = require('../../../params')
+const {
+  desktopReferenceBrowser,
+  mobileReferenceBrowser,
+  referenceThreshold,
+  browserThreshold,
+} = require('../../../params')
 
 function makeDir(dirPath) {
   return mkdirp.sync(dirPath)
@@ -47,7 +52,10 @@ exports.assertion = function assertion(filename, baselinePath, browserName) {
   }
 
   this.message = 'Unexpected compareScreenshot error.'
-  this.expected = browserName === desktopReferenceBrowser ? referenceThreshold : browserThreshold
+  this.expected =
+    browserName === desktopReferenceBrowser
+      ? referenceThreshold
+      : browserThreshold
 
   this.command = callback => {
     makeDir(path.dirname(resultPath))

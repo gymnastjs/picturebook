@@ -9,7 +9,9 @@ module.exports = (baseConfig, env) => {
     exclude: [join(picturebookPath, '/node_modules')],
   })
 
-  const ignoreContextRegex = new RegExp(picturebookPath + '/shared/storyFolders')
+  const ignoreContextRegex = new RegExp(
+    picturebookPath + '/shared/storyFolders'
+  )
 
   baseConfig.plugins.push(new webpack.IgnorePlugin(/test/, ignoreContextRegex))
 

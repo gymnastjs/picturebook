@@ -14,7 +14,7 @@ export default function WithExtensions({ notes, ...props }) {
 
   return (
     <div>
-      <div data-picturebook-test-id="root" {...props}  />
+      <div data-picturebook-test-id="root" {...props} />
     </div>
   )
 }

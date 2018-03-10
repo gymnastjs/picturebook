@@ -3,7 +3,8 @@ const { storyPath } = require('../../params')
 
 const { loadWebpack } = require('./webpack')
 
-const isTest = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'test:image'
+const isTest =
+  process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'test:image'
 
 let storyFolders
 
