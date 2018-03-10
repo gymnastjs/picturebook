@@ -1,6 +1,6 @@
 /* eslint-disable */
 const { resolve } = require('path')
-const { spawnSync } = require('child_process');
+const { spawn } = require('child_process')
 
 const pictureDir = resolve(__dirname, '../')
 const configDir = resolve(pictureDir, 'config')
@@ -27,9 +27,15 @@ module.exports = {
   },
   image() {
     const params = ['--config', nightwatchDir].concat(process.argv.slice(2))
-
-    spawnSync('./node_modules/.bin/nightwatch', params, {
-      stdio: 'pipe'
+    const command = spawn('./node_modules/.bin/nightwatch', params, {
+      stdio: 'pipe',
+      env: process.env,
     })
-  }
+
+    command.stdout.on('data', data => console.log(data.toString()))
+
+    command.stderr.on('data', data => console.error(data.toString()))
+
+    command.on('close', process.exit)
+  },
 }
