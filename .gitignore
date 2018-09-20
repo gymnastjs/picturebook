@@ -2,3 +2,10 @@ node_modules
 package-lock.json
 .DS_Store
 yarn-*.log
+dist
+selenium-*.log
+tests_output
+picturebook-*.log
+storybook-static
+src/screenshot/reports
+sampleFolder/tests_output

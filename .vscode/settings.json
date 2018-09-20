@@ -1,15 +1,10 @@
 {
-  "javascript.validate.enable": false,
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "es5",
-  "cSpell.words": ["picturebook", "preval"],
+  "cSpell.words": ["picturebook", "preval", "Bartra"],
   "editor.detectIndentation": false,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.insertSpaces": true,
-  "editor.tabSize": 2,
-  "files.associations": {
-    ".babelrc": "json",
-    ".eslintrc": "json"
-  }
+  "editor.tabSize": 2
 }
