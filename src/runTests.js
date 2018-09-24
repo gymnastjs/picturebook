@@ -2,8 +2,8 @@
 
 import { spawn } from 'child_process'
 import sauceConnect from 'node-sauce-connect'
-import { readLogs } from './utils'
-import type { ImgLog } from './picturebook.types'
+import { readLogs, compareImages } from './utils'
+import type { ImgTest, StoryPaths } from './picturebook.types'
 
 function logger(cb) {
   return data => {
@@ -62,20 +62,45 @@ function internalRunTests(configPath: string): Promise<number> {
   })
 }
 
-export function runTests(configPath: string): Promise<Array<ImgLog>> {
-  return internalRunTests(configPath).then(() => readLogs())
-}
+export default async function runTests({
+  configPath,
+  storyRoot,
+  overwrite,
+  files,
+  tunnelId,
+}: {|
+  +storyRoot: string,
+  +files: Array<StoryPaths>,
+  +overwrite: boolean,
+  +tunnelId?: string,
+  +configPath: string,
+|}): Promise<Array<ImgTest>> {
+  try {
+    if (tunnelId) {
+      await startTunnel(tunnelId)
+    }
 
-export function runTestsWithTunnel(
-  tunnelId: string,
-  configPath: string
-): Promise<Array<ImgLog>> {
-  return startTunnel(tunnelId)
-    .then(() => internalRunTests(configPath))
-    .then(stopTunnel)
-    .then(() => readLogs())
-    .catch(e => {
-      console.error(e)
-      return []
+    const exitCode = await internalRunTests(configPath)
+
+    if (exitCode !== 0) {
+      await stopTunnel(exitCode)
+      throw new Error('Error running tests')
+    }
+
+    const screenshots = readLogs()
+    const results = await compareImages({
+      screenshots,
+      root: storyRoot,
+      overwrite,
+      files,
     })
+
+    if (tunnelId) {
+      await stopTunnel(exitCode)
+    }
+    return results
+  } catch (e) {
+    console.error(e)
+    return []
+  }
 }

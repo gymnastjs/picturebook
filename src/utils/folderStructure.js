@@ -66,7 +66,9 @@ function createRelatedFileGroup(
       files.filter(file => file.endsWith('.png'))
     ),
     tests: groupFilesBySubExtension(
-      files.filter(file => file.endsWith('.spec.js'))
+      files.filter(
+        file => file.endsWith('.spec.js') || file.endsWith('.test.js')
+      )
     ),
     doc: files.find(file => file.endsWith('.md')),
   }

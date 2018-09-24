@@ -36,3 +36,15 @@ export type ImgLog = {|
   +platform: string,
   +browser: string,
 |}
+
+export type ImgTest = {|
+  +name: string,
+  +status: 'CREATED' | 'SUCCESS' | 'FAILED',
+  +error: ?string,
+  +diffPath: ?string,
+  +referencePath: ?string,
+  +screenshotPath: ?string,
+  +diffThreshold: number,
+  +browser: string,
+  +platform: string,
+|}

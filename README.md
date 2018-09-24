@@ -51,56 +51,105 @@ Alternatively, there's also the [require-context](https://www.npmjs.com/package/
 
 ## 📚 API
 
+The API can be split into 2 sections, storybook creation for finding files in the file system and creating storybook stories around them and storybook testing, to connect to SauceLabs and run cross-browser image comparison tests.
+
+### Storybook creation
+
+`getFiles` and `loadStories` have very similar APIs and output.
+
+`getFiles` allows you to retrieve a list of related files. For instance if you have:
+
+```sh
+file1.js
+file1.md
+file2.png
+file2.js
+```
+
+It will provide an array of 2 elements (file1 and file2) with the different related files grouped.
+
+These values are used to identify helper files for stories where `*.md` is understood to be documentation,`.*(spec|test).js` is a test file and an unprefixed `*.js` file is a story. The `flattenFolders` parameters allow grouping nested folders as well. For instance if `flattenFolders: ['a']` `file1.js` and `a/file1.png` will be grouped together.
+
+`loadStories` provide the same functionality than `getFiles` but it also loads and creates storybook stories. This is why it requires storybook's [storiesOf](https://storybook.js.org/basics/writing-stories/#writing-stories) method as a parameter. The response is also similar but it includes a `main` method with the loaded story.
+
+You can find the exact APIs below:
+
 ```js
-type StoryPaths = {|
-  +name: string,
-  +parents: $ReadOnlyArray<string>,
-  +title: string,
-  +path: string,
-  +screenshots: {|
-    +[extension: string]: string,
-  |},
-  +tests: {|
-    +[extension: string]: string,
-  |},
-  +doc: ?string,
-  +url: ?string,
-|}
-
-type LoadedStory = {|
-  ...$Exact<StoryPaths>,
-  +main: () => React.Node,
-|}
-
 type Options = {|
-  flattenFolders: $ReadOnlyArray<string>,
-  storiesOf: any,
-  stories: any,
-  baseUrl?: string,
+  baseUrl?: string,              // The url for the story, defaults to:
+                                 //   'http://localhost:6006'
+  flattenFolders?: Array<string> // Folders to flatten
+                                 //   defaults to ['__snapshots__', '__screenshots__']
+  stories: any,                  // Output of require context with the stories
+|}
+
+type StoryPaths = {|
+  name: string,
+  parents: $ReadOnlyArray<string>,
+  title: string,
+  path: string,
+  screenshots: {|
+    [extension: string]: string,
+  |},
+  tests: {|
+    [extension: string]: string,
+  |},
+  doc: ?string,
+  url: ?string,
+|}
+
+// Retrieve and group the different stories based on their filenames
+function getFiles(options: Options): Array<StoryPaths>
+
+// Retrieve, group, load and create stories
+function loadStories(options: Options & {|
   decorators: $ReadOnlyArray<Function>,
+  storiesOf: any,
   storyFiles: $ReadOnlyArray<string>,
-|}
+|}): Array<StoryPaths & {|
+  main: () => React.Node,
+|}>
+```
 
-type ImgLog = {|
-  +imgFileName: string,
-  +name: string,
-  +platform: string,
-  +browser: string
-|}
+### Storybook testing
 
-function getFiles(userOptions: $Shape<Options>): Array<StoryPaths>
+Once stories are loaded, `runTests` will connect to SauceLabs (optionally through a SauceConnect tunnel) and return a Promise that includes the results of the test.
 
-function loadStories(userOptions: $Shape<Options>): Array<LoadedStory>
+Since it uses `nightwatch` under the hood, you must have a valid nightwatch instance running. To assist with it, `nightwatchConfig` provides defaultValues
 
-function nightwatchConfig(params: {
+```js
+// Invoke nightwatch and run image comparison in SauceLabs
+function runTests(options: {|
+  configPath: string,           // absolute path to nightwatch config
+  files: Array<StoryPaths>,     // output of getFiles()
+  overwrite: boolean,           // true to replace failing or missing images
+  storyRoot: string,            // absolute path to the stories
+  tunnelId?: string,            // if set, it will set up a SC tunnel with the id
+|}): Promise<Array<{|
+  browser: string,
+  diffPath: ?string,
+  diffThreshold: number,
+  error: ?string,
+  name: string,
+  platform: string,
+  referencePath: ?string,
+  screenshotPath: ?string,
+  status: 'CREATED' | 'SUCCESS' | 'FAILED',
+|}>>
+
+// Nightwatch config generation helper
+function nightwatchConfig(options: {|
   desiredCapabilities?: {},     // nightwatch desired capabilities object
   files: Array<StoryPaths>,     // output of getFiles()
   username: string,             // SauceLabs username
   access_key: string,           // SauceLabs accessKey
   browsers?: {                  // List of browsers to test. Default list
-    [browserName: string]: {    //   includes chrome, firefox, edge, ie11, iphone7
-      desiredCapabilities: {    //   and safari but any valid SauceLabs config is
-        platform: string,       //   valid
+                                //   includes chrome, firefox, edge, ie11,
+                                //   iphone7 and safari but any valid SauceLabs
+                                //   config is valid
+    [browserName: string]: {
+      desiredCapabilities: {
+        platform: string,
         version: string,
         browserName: string,
         screenResolution: string,
@@ -108,7 +157,7 @@ function nightwatchConfig(params: {
       custom_vars: {|           // Custom properties required per browser config:
         name: string,           // Must match "browserName"
         platform: string,       // "mobile" | "desktop" but any string is allowed
-        extract?: {|            // If cropping the output, specify crop
+        extract?: {|            // If cropping the output, specify crop dimensions
           top: number,
           left: number,
           width: number,
@@ -123,31 +172,8 @@ function nightwatchConfig(params: {
   // List of browsers that can't access localhost from a tunnel, defaults to:
   // ["ie11", "safari"]
   localhostAliasBrowsers?: Array<string>,
-  resultPath?: string,           // Where to output the result file
-  proxy?: {},                    // Nightwatch proxy object
-}): Object
-
-function compareImages(params: {
-    screenshots: Array<ImgLog>,  // output of runTests() or runTestsWithTunnel()
-    files: Array<StoryPaths>,    // output of getFiles()
-    root: string,                // base path for the stories
-    threshold?: number,          // max number of different pixels allowed
-    overwrite?: boolean          // update image instead of failing
-  }): Promise<{
-    +name: string,
-    +status: 'CREATED' | 'SUCCESS' | 'FAILED',
-    +error: ?string,
-    +diffPath: ?string,
-    +referencePath: ?string,
-    +screenshotPath: ?string,
-    +diffThreshold: number,
-    +browser: string,
-    +platform: string,
-  }>
-
-function runTests(configPath: string): Promise<Array<ImgLog>>
-
-function runTestsWithTunnel(tunnelId: string, configPath: string): Promise<Array<ImgLog>>
+  proxy?: {},                   // Nightwatch proxy object
+|}): Object
 ```
 
 ## 🎪 Sample App
@@ -181,8 +207,6 @@ If you want to see a more advanced use case on how to use it with decorators and
 To take screenshots, picturebook relies on nightwatch. With the exception of a few required fields, configuration is generated for you. To take advantage of it you should create a `nightwatch.conf.js` file on your root (or customize it following instructions [here](http://nightwatchjs.org/gettingstarted#settings-file)).
 
 ```js
-require('babel-register')
-
 const { resolve } = require('path')
 const { nightwatchConfig, getFiles } = require('picturebook')
 const requireContext = require('require-context')
@@ -194,7 +218,6 @@ const config = nightwatchConfig({
     baseUrl: 'http://localhost:6006',
     stories: requireContext(resolve(__dirname, './stories'), true, /\.js/),
   }),
-  resultPath: resolve(__dirname, './picturebook-img.log'),
   desiredCapabilities: {
     build: 'local',
     'tunnel-identifier': 'picturebook-sample',
@@ -204,20 +227,21 @@ const config = nightwatchConfig({
 module.exports = config
 ```
 
-To run image comparison, after screenshots have been taken you can call:
+To take screenshots and run image comparison, you can call:
 
 ```js
-compareImages({
-  screenshots,
-  root: storyRoot,
-  overwrite: true,
+runTests({
+  storyRoot,
   files: getFiles({
     stories: requireContext(storyRoot, true, /\.(js|png)/),
   }),
+  overwrite,
+  tunnelId: 'picturebook-sample',
+  configPath: resolve(__dirname, 'nightwatch.conf.js'),
 })
 ```
 
-Where `screenshots` is the output of `runTestsWithTunnel` or `runTests` (if running with or without a tunnel, respectively).
+Note that if using a tunnel, `tunnel-identifier` on your nightwatch config must match the `tunnelId` parameter passed to `runTests`.
 
 ## 🙋 QYMA (Questions you may ask)
 
@@ -248,4 +272,32 @@ Sometimes it gets stuck. Try cleaning `node_modules` and re-running yarn:
 ```sh
 rm -rf node_modules
 yarn
+```
+
+### Error retrieving a new session from the selenium server
+
+This is a Nightwatch issue, addressed in 1.0.4 versions of Nightwatch and later as per [this issue](https://github.com/nightwatchjs/nightwatch/issues/1772).
+
+### node-dir "cannot read property 'files' of undefined" error
+
+There's currently a [bug in node-dir](https://github.com/fshost/node-dir/issues/53) that fails on empty dirs.
+
+Remove empty folders within your stories if you see the following error:
+
+```sh
+yourProject/node_modules/node-dir/lib/paths.js:92
+                results.files = results.files.concat(res.files);
+                                                         ^
+
+TypeError: Cannot read property 'files' of undefined
+    at subloop (/Users/obartra/repos/gymnast/node_modules/node-dir/lib/paths.js:92:58)
+    at /Users/obartra/repos/gymnast/node_modules/node-dir/lib/paths.js:107:13
+    at onDirRead (/Users/obartra/repos/gymnast/node_modules/node-dir/lib/paths.js:139:35)
+    at onStat (/Users/obartra/repos/gymnast/node_modules/node-dir/lib/paths.js:154:14)
+```
+
+You can do so with:
+
+```sh
+find /some/path -depth -type d -exec rmdir {} \;
 ```

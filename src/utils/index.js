@@ -1,5 +1,5 @@
 // @flow
 
 export * from './browser'
-export * from './image'
 export * from './logs'
+export { default as compareImages } from './compareImages'

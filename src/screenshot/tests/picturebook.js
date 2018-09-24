@@ -13,7 +13,7 @@ function onError(err) {
 
 module.exports = {
   Screenshot: browser => {
-    const { files } = browser.options.desiredCapabilities
+    const { files, screenResolution } = browser.options.desiredCapabilities
     const {
       name,
       platform,
@@ -49,11 +49,29 @@ module.exports = {
           false,
           ({ value, status }) => {
             if (value) {
-              browser.saveScreenshot(imgFileName, () => {
-                if (extract) {
-                  PNGCrop.crop(imgFileName, imgFileName, extract, onError)
-                }
-              })
+              const unCropped = extract
+                ? imgFileName.replace('.png', '_uncropped.png')
+                : imgFileName
+
+              if (screenResolution) {
+                browser.resizeWindow(...screenResolution.split('x'))
+              }
+
+              browser
+                .execute(() => {
+                  document.body.style.overflow = 'hidden'
+                  return true
+                })
+                .saveScreenshot(unCropped, (response, err) => {
+                  if (err) {
+                    console.error('Failed to save screenshots')
+                    return false
+                  }
+                  if (extract) {
+                    PNGCrop.crop(unCropped, imgFileName, extract, onError)
+                  }
+                  return true
+                })
             } else {
               console.log(value, status, name)
             }

@@ -44,25 +44,41 @@ export function replaceImage(
   })
 }
 
+function getSize(img: ImageData): string {
+  return `${img.width}x${img.height}`
+}
+
 export function getImageDiff(
   imgPath1: string,
   imgPath2: string,
   threshold: number
-) {
+): Promise<{|
+  +diffThreshold: number,
+  +diff: PNG,
+  +img1Size: string,
+  +img2Size: string,
+|}> {
   return Promise.all([readImage(imgPath1), readImage(imgPath2)]).then(
-    ([ref, img]) => {
-      const diff = new PNG({ width: ref.width, height: ref.height })
+    ([img1, img2]) => {
+      const diff = new PNG({ width: img1.width, height: img1.height })
+      const total = img1.width * img1.height
       const count = pixelmatch(
-        ref.data,
-        img.data,
+        img1.data,
+        img2.data,
         diff.data,
-        ref.width,
-        ref.height,
+        img1.width,
+        img1.height,
         {
           threshold,
         }
       )
-      return { count, diff }
+
+      return {
+        diff,
+        diffThreshold: Math.round((count * 100) / total) / 100,
+        img1Size: getSize(img1),
+        img2Size: getSize(img2),
+      }
     }
   )
 }

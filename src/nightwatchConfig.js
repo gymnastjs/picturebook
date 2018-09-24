@@ -34,7 +34,6 @@ type Overrides = {
   },
   localhostAlias?: string,
   localhostAliasBrowsers?: Array<string>,
-  resultPath?: string,
   proxy?: {},
 }
 
@@ -50,7 +49,6 @@ module.exports = function nightwatchConfig({
   browsers,
   localhostAliasBrowsers = ['edge', 'safari'],
   localhostAlias = 'localtest.dev',
-  resultPath,
   ...overrides
 }: Overrides) {
   if (!files.length) {
@@ -101,7 +99,6 @@ module.exports = function nightwatchConfig({
             globals: {
               localhostAlias,
               localhostAliasBrowsers,
-              resultPath,
             },
           },
           commonSettings,

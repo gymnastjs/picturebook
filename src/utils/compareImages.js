@@ -2,8 +2,8 @@
 import { resolve, dirname, basename } from 'path'
 import rimraf from 'rimraf'
 import { isEmpty } from 'lodash'
-import type { StoryPaths, ImgLog } from './picturebook.types'
-import { replaceImage, getImageDiff, writeImage } from './utils'
+import type { StoryPaths, ImgLog, ImgTest } from '../picturebook.types'
+import { replaceImage, getImageDiff, writeImage } from './image'
 
 type Params = {
   screenshots: Array<ImgLog>,
@@ -13,19 +13,53 @@ type Params = {
   overwrite?: boolean,
 }
 
-type Response = {
-  +name: string,
-  +status: 'CREATED' | 'SUCCESS' | 'FAILED',
-  +error: ?string,
-  +diffPath: ?string,
-  +referencePath: ?string,
-  +screenshotPath: ?string,
-  +diffThreshold: number,
-  +browser: string,
-  +platform: string,
+const diffRoot = resolve(__dirname, 'screenshot', 'reports', 'diffs')
+const toPct = num => `${num * 100}%`
+
+function updateReferenceImage({
+  imgFileName,
+  referencePath,
+  baseResponse,
+  diffThreshold,
+}) {
+  return replaceImage(imgFileName, referencePath)
+    .then(() => ({
+      ...baseResponse,
+      status: 'CREATED',
+      diffThreshold: 0,
+    }))
+    .catch(e => ({
+      ...baseResponse,
+      status: 'FAILED',
+      error: `Updating image failed ${e.message}`,
+      diffThreshold,
+    }))
 }
 
-const diffRoot = resolve(__dirname, 'screenshot', 'reports', 'diffs')
+function writeDiffImage({
+  diffData,
+  diffPath,
+  baseResponse,
+  diffThreshold,
+  threshold,
+}) {
+  return writeImage(diffData, diffPath)
+    .then(() => ({
+      ...baseResponse,
+      status: 'FAILED',
+      error: `Pixel differences of ${toPct(
+        diffThreshold
+      )} are above the threshold (${toPct(threshold)})`,
+      diffPath,
+      diffThreshold,
+    }))
+    .catch(e => ({
+      ...baseResponse,
+      status: 'FAILED',
+      error: `Image creation failed ${e.message}`,
+      diffThreshold,
+    }))
+}
 
 function compareImageGroup({
   imgFileName,
@@ -36,7 +70,7 @@ function compareImageGroup({
   root,
   overwrite = false,
   threshold = 0,
-}): Promise<Response> {
+}): Promise<ImgTest> {
   const browserKey = `${platform}.${browser}`
   const referenceFolder = resolve(root, dirname(name), '__screenshots__')
   const referenceFile = `${basename(name)}.${browserKey}.png`
@@ -88,42 +122,48 @@ function compareImageGroup({
   }
 
   return getImageDiff(imgFileName, referencePath, 0)
-    .then(({ count, diff }) => {
-      if (count > threshold) {
-        return writeImage(diff.pack(), diffPath)
-          .then(() => {
-            if (overwrite) {
-              return replaceImage(imgFileName, referencePath).then(() => ({
-                ...baseResponse,
-                status: 'CREATED',
-                diffThreshold: 0,
-              }))
-            }
-            return {
-              ...baseResponse,
-              status: 'FAILED',
-              error: `Pixel differences of ${count} are above the threshold (${threshold})`,
-              diffPath,
-              diffThreshold: count,
-            }
-          })
-          .catch(e => ({
-            ...baseResponse,
-            status: 'FAILED',
-            error: e.message,
-            diffThreshold: count,
-          }))
+    .then(({ diffThreshold, diff, img1Size, img2Size }) => {
+      const sizeMismatch = img1Size !== img2Size
+      const aboveThreshold = diffThreshold > threshold
+      const hasError = sizeMismatch || aboveThreshold
+
+      if (hasError && overwrite) {
+        return updateReferenceImage({
+          imgFileName,
+          referencePath,
+          baseResponse,
+          diffThreshold,
+        })
+      }
+
+      if (sizeMismatch) {
+        return {
+          ...baseResponse,
+          status: 'FAILED',
+          error: `Image size mismatch ${img1Size} vs reference ${img2Size}`,
+          diffPath,
+          diffThreshold,
+        }
+      }
+      if (diffThreshold > threshold) {
+        return writeDiffImage({
+          diffData: diff.pack(),
+          diffPath,
+          baseResponse,
+          diffThreshold,
+          threshold,
+        })
       }
       return {
         ...baseResponse,
         status: 'SUCCESS',
-        diffThreshold: count,
+        diffThreshold,
       }
     })
     .catch(e => ({
       ...baseResponse,
       status: 'FAILED',
-      error: e.message,
+      error: `ImageDiff failed: ${e.message}`,
       diffThreshold: -1,
     }))
 }

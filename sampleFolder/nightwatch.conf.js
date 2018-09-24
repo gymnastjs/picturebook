@@ -1,8 +1,6 @@
-require('babel-register')
-
 const requireContext = require('require-context')
 const { resolve } = require('path')
-const { nightwatchConfig, getFiles } = require('../src')
+const { nightwatchConfig, getFiles } = require('../dist')
 
 const config = nightwatchConfig({
   username: process.env.SAUCE_USERNAME,
@@ -11,7 +9,6 @@ const config = nightwatchConfig({
     baseUrl: 'http://localhost:6006',
     stories: requireContext(resolve(__dirname, './stories'), true, /\.js/),
   }),
-  resultPath: resolve(__dirname, './picturebook-img.log'),
   desiredCapabilities: {
     build: 'local',
     'tunnel-identifier': 'picturebook-sample',

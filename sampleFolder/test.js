@@ -1,38 +1,57 @@
-require('babel-register')
 const test = require('tape')
 const requireContext = require('require-context')
 const { resolve } = require('path')
-const { runTestsWithTunnel, compareImages, getFiles } = require('../src')
+const { runTests, getFiles } = require('../dist')
 
 const storyRoot = resolve(__dirname, './stories')
+const overwrite = process.argv.includes('-u')
 
-function runTests(results) {
-  results.forEach(({ platform, browser, name, status }) => {
-    test(`${platform}.${browser}.${name}`, t => {
-      t.equal(status, 'SUCCESS')
-      t.end()
-    })
-  })
+function getErrorMessage({
+  status,
+  diffPath,
+  referencePath,
+  screenshotPath,
+  diffThreshold,
+  error,
+}) {
+  return `Comparison failed:
+  Difference: ${diffPath || '[Not available]'}
+  Reference: ${referencePath || '[Not available]'}
+  New: ${screenshotPath || '[Not available]'}
+  Threshold: ${diffThreshold || '[Not available]'}
+  Status: ${status || '[Not available]'}
+  Error: ${error || '[Not available]'}
+  `
 }
 
-runTestsWithTunnel(
-  'picturebook-sample',
-  resolve(__dirname, 'nightwatch.conf.js')
-)
-  .then(screenshots => {
-    if (!screenshots || !screenshots.length) {
-      throw new Error('Screenshots not captured', screenshots)
-    }
-    return compareImages({
-      screenshots,
-      root: storyRoot,
-      overwrite: true,
-      files: getFiles({
-        stories: requireContext(storyRoot, true, /\.(js|png)/),
-      }),
+runTests({
+  storyRoot,
+  files: getFiles({
+    stories: requireContext(storyRoot, true, /\.(js|png)/),
+  }),
+  overwrite,
+  tunnelId: 'picturebook-sample',
+  configPath: resolve(__dirname, 'nightwatch.conf.js'),
+})
+  .then(results => {
+    results.forEach(result => {
+      const { platform, browser, name, status } = result
+
+      test(`${platform}.${browser}.${name}`, t => {
+        let success
+        if (overwrite) {
+          success = ['SUCCESS', 'CREATED'].includes(status)
+        } else {
+          success = status === 'SUCCESS'
+        }
+        if (!success) {
+          console.log(getErrorMessage(result))
+        }
+        t.equal(success, true)
+        t.end()
+      })
     })
   })
-  .then(runTests)
   .catch(e => {
     console.error('Screenshot capturing failed', e.stack)
   })
