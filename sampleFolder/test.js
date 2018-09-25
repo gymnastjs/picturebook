@@ -32,8 +32,14 @@ runTests({
   overwrite,
   tunnelId: 'picturebook-sample',
   configPath: resolve(__dirname, 'nightwatch.conf.js'),
+  outputPath: resolve(__dirname, 'picturebook-results.json'),
 })
-  .then(results => {
+  .then(({ results, error }) => {
+    test('should succeed', t => {
+      t.equal(error, null)
+      t.end()
+    })
+
     results.forEach(result => {
       const { platform, browser, name, status } = result
 

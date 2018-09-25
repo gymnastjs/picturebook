@@ -2,8 +2,14 @@
 
 import { spawn } from 'child_process'
 import sauceConnect from 'node-sauce-connect'
-import { readLogs, compareImages } from './utils'
-import type { ImgTest, StoryPaths } from './picturebook.types'
+import { version } from '../package.json'
+import { readLogs, writeFile, compareImages } from './utils'
+import type {
+  ImgTest,
+  ImgResult,
+  StoryPaths,
+  Status,
+} from './picturebook.types'
 
 function logger(cb) {
   return data => {
@@ -62,19 +68,68 @@ function internalRunTests(configPath: string): Promise<number> {
   })
 }
 
+function count(results: Array<ImgTest>, targetStatus: Status): number {
+  return results.reduce(
+    (total, { status }) => (targetStatus === status ? total + 1 : total),
+    0
+  )
+}
+
+function getOverallStatus(counts: Object): Status | 'EMPTY' {
+  if (counts.FAILED > 0) {
+    return 'FAILED'
+  }
+  if (counts.CREATED > 0) {
+    return 'CREATED'
+  }
+  if (counts.SUCCESS > 0) {
+    return 'SUCCESS'
+  }
+
+  return 'EMPTY'
+}
+
+function writeResults(
+  outputPath: ?string,
+  results: Array<ImgTest>,
+  error: Error | null
+): ImgResult {
+  const counts = {
+    CREATED: count(results, 'CREATED'),
+    SUCCESS: count(results, 'SUCCESS'),
+    FAILED: count(results, 'FAILED'),
+  }
+  const status = getOverallStatus(counts)
+  const date = new Date().toISOString()
+
+  const data = { error, counts, status, results, version, date }
+
+  if (error) {
+    console.error(error)
+  }
+
+  if (outputPath) {
+    writeFile(outputPath, data)
+  }
+
+  return data
+}
+
 export default async function runTests({
   configPath,
   storyRoot,
   overwrite,
   files,
   tunnelId,
+  outputPath,
 }: {|
   +storyRoot: string,
   +files: Array<StoryPaths>,
   +overwrite: boolean,
   +tunnelId?: string,
   +configPath: string,
-|}): Promise<Array<ImgTest>> {
+  +outputPath?: string,
+|}): Promise<ImgResult> {
   try {
     if (tunnelId) {
       await startTunnel(tunnelId)
@@ -98,9 +153,9 @@ export default async function runTests({
     if (tunnelId) {
       await stopTunnel(exitCode)
     }
-    return results
-  } catch (e) {
-    console.error(e)
-    return []
+
+    return writeResults(outputPath, results, null)
+  } catch (error) {
+    return writeResults(outputPath, [], error)
   }
 }

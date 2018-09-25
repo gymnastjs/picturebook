@@ -37,9 +37,11 @@ export type ImgLog = {|
   +browser: string,
 |}
 
+export type Status = 'CREATED' | 'SUCCESS' | 'FAILED'
+
 export type ImgTest = {|
   +name: string,
-  +status: 'CREATED' | 'SUCCESS' | 'FAILED',
+  +status: Status,
   +error: ?string,
   +diffPath: ?string,
   +referencePath: ?string,
@@ -47,4 +49,17 @@ export type ImgTest = {|
   +diffThreshold: number,
   +browser: string,
   +platform: string,
+|}
+
+export type ImgResult = {|
+  +error: Error | null,
+  +results: Array<ImgTest>,
+  +status: Status | 'EMPTY',
+  +counts: {|
+    +CREATED: number,
+    +SUCCESS: number,
+    +FAILED: number,
+  |},
+  +version: string,
+  +date: string,
 |}

@@ -118,6 +118,19 @@ Once stories are loaded, `runTests` will connect to SauceLabs (optionally throug
 Since it uses `nightwatch` under the hood, you must have a valid nightwatch instance running. To assist with it, `nightwatchConfig` provides defaultValues
 
 ```js
+type Status = 'CREATED' | 'SUCCESS' | 'FAILED'
+type ImgResults = {|
+    browser: string,
+    diffPath: ?string,
+    diffThreshold: number,
+    error: ?string,
+    name: string,
+    platform: string,
+    referencePath: ?string,
+    screenshotPath: ?string,
+    status: Status,
+  |}
+
 // Invoke nightwatch and run image comparison in SauceLabs
 function runTests(options: {|
   configPath: string,           // absolute path to nightwatch config
@@ -125,17 +138,23 @@ function runTests(options: {|
   overwrite: boolean,           // true to replace failing or missing images
   storyRoot: string,            // absolute path to the stories
   tunnelId?: string,            // if set, it will set up a SC tunnel with the id
-|}): Promise<Array<{|
-  browser: string,
-  diffPath: ?string,
-  diffThreshold: number,
-  error: ?string,
-  name: string,
-  platform: string,
-  referencePath: ?string,
-  screenshotPath: ?string,
-  status: 'CREATED' | 'SUCCESS' | 'FAILED',
-|}>>
+  outputPath?: string,          // if set, where to store the test results as a
+                                // json file matching the return of `runTests`
+|}): Promise<{|
+  error: Error | null,          // null if there were no exceptions during tests
+  results: Array<ImgResults>,   // per browser / platform / story results
+  // An overall summary status. If any tests failed, it's FAILED, if any tests
+  // where created or updated it's CREATED, if all tests succeeded it's SUCCESS
+  // if no tests ran, it's EMPTY
+  status: Status | 'EMPTY',
+  counts: {|                    // counts for all tests
+    CREATED: number,
+    SUCCESS: number,
+    FAILED: number,
+  |},
+  version: string,              // picturebook version used
+  date: string,                 // ISO date when was the test report created
+|}>
 
 // Nightwatch config generation helper
 function nightwatchConfig(options: {|

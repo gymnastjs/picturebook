@@ -1,18 +1,20 @@
 // @flow
 import { mkdirpSync } from 'fs-extra'
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
 import { writeFileSync, readFileSync, readdirSync } from 'fs'
 import type { ImgLog } from '../picturebook.types'
 
 const logPath = resolve(__dirname, '../screenshot/reports/logs')
 
+export function writeFile(path: string, data: Object) {
+  mkdirpSync(dirname(path))
+  writeFileSync(path, JSON.stringify(data, undefined, 2), 'utf-8')
+}
+
 export function writeLog(name: string, data: ImgLog) {
-  mkdirpSync(logPath)
-  writeFileSync(
-    resolve(logPath, `${name}.log`),
-    JSON.stringify(data, undefined, 2),
-    'utf-8'
-  )
+  const path = resolve(logPath, `${name}.log`)
+
+  return writeFile(path, data)
 }
 
 export function readLogs(): Array<ImgLog> {
