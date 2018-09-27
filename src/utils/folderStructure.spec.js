@@ -1,6 +1,6 @@
 // @flow
 import folderStructure from './folderStructure'
-import defaults from '../defaults'
+import getDefaults from '../defaults'
 import type { Options } from '../picturebook.types'
 
 const { resolve } = require('path')
@@ -9,14 +9,13 @@ describe('folderStructure', () => {
   let options: $Shape<Options>
 
   beforeEach(() => {
-    options = {
-      ...defaults,
+    options = getDefaults({
       stories: require.context(
         resolve(__dirname, '../../sampleFolder/stories'),
         true,
         /\.(js|md|png|jpg)/
       ),
-    }
+    })
   })
 
   it('should add markdown file as documentation when present', () => {
@@ -60,5 +59,32 @@ describe('folderStructure', () => {
     const out = folderStructure({ ...options, baseUrl })
 
     expect(out.every(({ url }) => (url || '').startsWith(baseUrl))).toBe(true)
+  })
+
+  it('should allow customizing how extensions are filtered', () => {
+    const out = folderStructure({
+      ...options,
+      filter: {
+        ...options.filter,
+        tests: file => file.includes('desktop.chrome'),
+      },
+    })
+    const { tests } = out.find(({ title }) => title === 'File4') || {}
+
+    expect(tests['desktop.chrome']).toEqual(expect.any(String))
+  })
+
+  it('should allow customizing kind and story', () => {
+    const out = folderStructure({
+      ...options,
+      findKindAndStory: () => ({
+        selectedKind: 'woof',
+        selectedStory: 'meow',
+      }),
+    })
+    const { url } = out.find(({ title }) => title === 'File4') || {}
+
+    expect(url).toContain('selectedKind=woof')
+    expect(url).toContain('selectedStory=meow')
   })
 })

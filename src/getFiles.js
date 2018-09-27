@@ -1,12 +1,10 @@
 // @flow
-import type { StoryPaths } from './picturebook.types'
+import type { Options, StoryPaths } from './picturebook.types'
 import { folderStructure } from './utils'
-import defaults from './defaults'
+import getDefaults from './defaults'
 
-export default function getFiles(userOptions: {
-  stories: any,
-  flattenFolders: $ReadOnlyArray<string>,
-  baseUrl?: string,
-}): Array<StoryPaths> {
-  return folderStructure({ ...defaults, ...userOptions })
+export default function getFiles(
+  userOptions: $Shape<Options>
+): Array<StoryPaths> {
+  return folderStructure(getDefaults(userOptions))
 }

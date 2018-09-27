@@ -1,12 +1,16 @@
 // @flow
 import { groupBy, map } from 'lodash'
-import type { Options, LoadedStory, StoryPaths } from './picturebook.types'
+import type {
+  LoadStoryOptions,
+  LoadedStory,
+  StoryPaths,
+} from './picturebook.types'
 import { folderStructure, getParents, moduleAsFunction } from './utils'
-import defaults from './defaults'
+import getDefaults from './defaults'
 
 export function importStories(
   list: $ReadOnlyArray<StoryPaths>,
-  options: $Shape<Options>
+  options: LoadStoryOptions
 ): $ReadOnlyArray<LoadedStory> {
   return list.map(
     ({ doc, ...story }: StoryPaths): LoadedStory => ({
@@ -29,7 +33,7 @@ function groupByParent(
 
 export function createStories(
   groupedPaths: $ReadOnlyArray<LoadedStory>,
-  { storiesOf, decorators }: Options
+  { storiesOf, decorators }: LoadStoryOptions
 ) {
   const grouped = groupByParent(groupedPaths)
 
@@ -49,9 +53,12 @@ export function createStories(
 }
 
 export default function loadStories(
-  userOptions: $Shape<Options>
+  userOptions: $Shape<LoadStoryOptions>
 ): Array<LoadedStory> {
-  const options: Options = { ...defaults, ...userOptions }
+  const options: LoadStoryOptions = {
+    decorators: [],
+    ...getDefaults(userOptions),
+  }
   const grouped = folderStructure(options)
   const imported = importStories(grouped, options)
   const created = createStories(imported, options)

@@ -1,7 +1,6 @@
 // @flow
 import { groupBy, map, mapValues, compact } from 'lodash'
 import type { Options, StoryPaths } from '../picturebook.types'
-import getParents from './getParents'
 
 function removeFolderInPath(file: string, folder: string): string {
   return file.replace(folder, '').replace(/(\\\\|\/\/)/g, '/')
@@ -47,11 +46,12 @@ function groupFilesBySubExtension(
 
 function createRelatedFileGroup(
   files: $ReadOnlyArray<string>,
-  name: string
+  name: string,
+  filter: $PropertyType<Options, 'filter'>
 ): ?$Diff<StoryPaths, { +url: ?string }> {
   const parents = name.split('/')
   const story = parents.pop()
-  const storyPath = files.find(file => file.endsWith(`${name}.js`))
+  const storyPath = files.find(file => filter.story(file, name))
 
   if (!storyPath) {
     return undefined
@@ -62,29 +62,25 @@ function createRelatedFileGroup(
     parents,
     title: deKebab(story),
     path: storyPath,
-    screenshots: groupFilesBySubExtension(
-      files.filter(file => file.endsWith('.png'))
-    ),
-    tests: groupFilesBySubExtension(
-      files.filter(
-        file => file.endsWith('.spec.js') || file.endsWith('.test.js')
-      )
-    ),
-    doc: files.find(file => file.endsWith('.md')),
+    screenshots: groupFilesBySubExtension(files.filter(filter.screenshots)),
+    tests: groupFilesBySubExtension(files.filter(filter.tests)),
+    doc: files.find(filter.docs),
   }
 }
 
 function addUrl(
   story: ?$Diff<StoryPaths, { +url: ?string }>,
-  baseUrl: ?string
+  baseUrl: ?string,
+  findKindAndStory: $PropertyType<Options, 'findKindAndStory'>
 ): ?StoryPaths {
   if (!baseUrl || !story) {
     return undefined
   }
 
-  const encodedParents = encodeURIComponent(getParents(story))
-  const encodedStory = encodeURIComponent(story.title)
-  const url = `${baseUrl}/iframe.html?selectedKind=${encodedParents}&selectedStory=${encodedStory}`
+  const { selectedKind, selectedStory } = findKindAndStory(story)
+  const url = `${baseUrl}/iframe.html?selectedKind=${encodeURIComponent(
+    selectedKind
+  )}&selectedStory=${encodeURIComponent(selectedStory)}`
 
   return { ...story, url }
 }
@@ -93,12 +89,16 @@ export default function folderStructure({
   stories,
   flattenFolders,
   baseUrl,
+  filter,
+  findKindAndStory,
 }: Options): Array<StoryPaths> {
   const groups = groupBy(stories.keys(), filename =>
     groupRelatedFiles(filename, flattenFolders)
   )
 
   return compact(
-    map(groups, createRelatedFileGroup).map(story => addUrl(story, baseUrl))
+    map(groups, (files, name) =>
+      createRelatedFileGroup(files, name, filter)
+    ).map(story => addUrl(story, baseUrl, findKindAndStory))
   )
 }

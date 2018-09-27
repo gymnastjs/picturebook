@@ -75,14 +75,6 @@ These values are used to identify helper files for stories where `*.md` is under
 You can find the exact APIs below:
 
 ```js
-type Options = {|
-  baseUrl?: string,              // The url for the story, defaults to:
-                                 //   'http://localhost:6006'
-  flattenFolders?: Array<string> // Folders to flatten
-                                 //   defaults to ['__snapshots__', '__screenshots__']
-  stories: any,                  // Output of require context with the stories
-|}
-
 type StoryPaths = {|
   name: string,
   parents: $ReadOnlyArray<string>,
@@ -99,10 +91,33 @@ type StoryPaths = {|
 |}
 
 // Retrieve and group the different stories based on their filenames
-function getFiles(options: Options): Array<StoryPaths>
+function getFiles({|
+  baseUrl?: string,              // The url for the story, defaults to:
+                                 //   'http://localhost:6006'
+  flattenFolders?: Array<string> // Folders to flatten
+                                 //   defaults to ['__snapshots__', '__screenshots__']
+  stories: any,                  // Output of require context with the stories
+  findKindAndStory?: (           // Customize "selectedKind" and "selectedStory" on the URL
+    story: StoryPaths,           //   this is not needed if stories are generated with "loadStories"
+  ) => {|
+    selectedKind: string,
+    selectedStory: string
+  |},
+  filter?: {|                    // Filter functions to determine how different files are grouped
+    screenshots?: (file: string) => boolean,
+    tests?: (file: string) => boolean,
+    docs?: (file: string) => boolean,
+    story?: (file: string, target: string) => boolean,
+  |}
+|}): Array<StoryPaths>
 
 // Retrieve, group, load and create stories
-function loadStories(options: Options & {|
+function loadStories({|
+  baseUrl?: string,              // The url for the story, defaults to:
+                                 //   'http://localhost:6006'
+  flattenFolders?: Array<string> // Folders to flatten
+                                 //   defaults to ['__snapshots__', '__screenshots__']
+  stories: any,                  // Output of require context with the stories
   decorators: $ReadOnlyArray<Function>,
   storiesOf: any,
   storyFiles: $ReadOnlyArray<string>,

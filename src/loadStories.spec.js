@@ -1,27 +1,27 @@
 // @flow
 import { storiesOf } from '@storybook/react'
 import { importStories, createStories } from './loadStories'
-import type { Options } from './picturebook.types'
+import type { LoadStoryOptions } from './picturebook.types'
 import { folderStructure } from './utils'
-import defaults from './defaults'
+import getDefaults from './defaults'
 
 const { resolve } = require('path')
 
 describe('loadStories', () => {
-  let options: $Shape<Options>
+  let options: $Shape<LoadStoryOptions>
   let grouped
   let imported
 
   beforeEach(() => {
-    options = {
-      ...defaults,
+    options = getDefaults({
+      decorators: [],
       stories: require.context(
         resolve(__dirname, '../sampleFolder/stories'),
         true,
         /\.(js|md|png|jpg)/
       ),
       storiesOf,
-    }
+    })
     grouped = folderStructure(options)
     imported = importStories(grouped, options)
   })

@@ -1,15 +1,6 @@
 // @flow
 import * as React from 'react'
 
-export type Options = {|
-  flattenFolders: $ReadOnlyArray<string>,
-  storiesOf: any,
-  stories: any,
-  baseUrl?: string,
-  decorators: $ReadOnlyArray<Function>,
-  storyFiles: $ReadOnlyArray<string>,
-|}
-
 export type StoryPaths = {|
   +name: string,
   +parents: $ReadOnlyArray<string>,
@@ -24,6 +15,31 @@ export type StoryPaths = {|
   +doc: ?string,
   +url: ?string,
 |}
+
+export type Options = {
+  stories: any,
+  flattenFolders: $ReadOnlyArray<string>,
+  baseUrl?: string,
+  findKindAndStory: (
+    story: $Diff<StoryPaths, { +url: ?string }>
+  ) => {|
+    selectedKind: string,
+    selectedStory: string,
+  |},
+  filter: {
+    screenshots: (file: string) => boolean,
+    tests: (file: string) => boolean,
+    docs: (file: string) => boolean,
+    story: (file: string, target: string) => boolean,
+  },
+}
+
+export type LoadStoryOptions = Options & {
+  stories: any,
+  storiesOf: any,
+  decorators: $ReadOnlyArray<Function>,
+  storyFiles: $ReadOnlyArray<string>,
+}
 
 export type LoadedStory = {|
   ...$Exact<StoryPaths>,
