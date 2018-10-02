@@ -335,3 +335,15 @@ You can do so with:
 ```sh
 find /some/path -depth -type d -exec rmdir {} \;
 ```
+
+### No Java runtime present
+
+Selenium 3.0+ requires Java 8. Make sure it's installed if you get the following error:
+
+```sh
+Starting selenium server in parallel mode... There was an error while starting the Selenium server:
+
+No Java runtime present, requesting install.
+```
+
+For additional Selenium tips, check out [selenium-standalone tips](https://www.npmjs.com/package/selenium-standalone#tips).

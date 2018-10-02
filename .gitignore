@@ -10,3 +10,4 @@ storybook-static
 src/screenshot/reports
 sampleFolder/tests_output
 sampleFolder/picturebook-results.json
+.eslintcache
