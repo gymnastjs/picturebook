@@ -1,8 +1,8 @@
 # 🤖📗 PictureBook
 
-Automated React Storybook Setup
+Automated Storybook Setup
 
-Simplify React Storybook story creation and cross-browser image comparison testing
+Simplify Storybook story creation and cross-browser image comparison testing
 
 ## 💡 Rationale
 
@@ -26,6 +26,8 @@ This project aims to provide utility methods to simplify [Storybook](https://sto
 ```sh
 yarn add --dev picturebook @storybook/react nightwatch react
 ```
+
+React is used in the examples but you can also use any flavor of storybook you want.
 
 If you don't have Storybook set it up yet, follow [these instructions](https://storybook.js.org/basics/quick-start-guide/) first.
 
@@ -122,7 +124,7 @@ function loadStories({|
   storiesOf: any,
   storyFiles: $ReadOnlyArray<string>,
 |}): Array<StoryPaths & {|
-  main: () => React.Node,
+  main: () => any,
 |}>
 ```
 

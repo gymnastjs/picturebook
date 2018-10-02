@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "2.0.0-beta.12",
+  "version": "2.0.0-beta.13",
   "description": "Opinionated Storybook Setup",
   "main": "dist/index.js",
   "browser": "dist/picturebook.web.js",
@@ -65,8 +65,6 @@
     "webpack-cli": "3.1.2"
   },
   "peerDependencies": {
-    "nightwatch": ">=0.9.x",
-    "react": ">= 15.x",
-    "react-dom": ">= 15.x"
+    "nightwatch": ">=0.9.x"
   }
 }

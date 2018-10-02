@@ -1,6 +1,4 @@
 // @flow
-import * as React from 'react'
-
 export type StoryPaths = {|
   +name: string,
   +parents: $ReadOnlyArray<string>,
@@ -43,7 +41,7 @@ export type LoadStoryOptions = Options & {
 
 export type LoadedStory = {|
   ...$Exact<StoryPaths>,
-  +main: () => React.Node,
+  +main: () => any,
 |}
 
 export type ImgLog = {|
