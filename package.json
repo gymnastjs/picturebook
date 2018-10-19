@@ -7,6 +7,10 @@
   "repository": "https://github.com/obartra/picturebook",
   "author": "Oscar Bartra",
   "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "format": "prettier --write \"{{src,test,sampleFolder}/**/,}*.js\"",
     "test": "jest",
