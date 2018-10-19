@@ -81,5 +81,4 @@ export type ImgResult = {|
 export type Tunnel = {|
   +id: string,
   +binaryPath: string,
-  +maxRetryAttempts?: number,
 |}

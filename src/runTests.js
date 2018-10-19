@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable no-await-in-loop */
 import { spawn } from 'child_process'
 import { version } from '../package.json'
 import { readLogs, writeFile, compareImages } from './utils'
@@ -22,18 +21,18 @@ function killTunnelInstance() {
 }
 
 function retry(resolve, reject, maxRetryAttempts) {
-  return () => {
+  return exitCode => {
     killTunnelInstance()
 
     if (++retryAttempts > maxRetryAttempts) {
       shouldRetry = false
-      reject(new Error('Unable to connect to Sauce Labs'))
+      reject(exitCode)
     } else {
       console.log(
-        `Sauce Labs connection failed, attempting ${retryAttempts} of ${maxRetryAttempts} retries`
+        `Selenium server connection failed, attempting ${retryAttempts} of ${maxRetryAttempts} retries`
       )
       shouldRetry = true
-      resolve()
+      resolve(exitCode)
     }
   }
 }
@@ -48,7 +47,7 @@ function logger(cb) {
   }
 }
 
-function startTunnel({ id, binaryPath, maxRetryAttempts = 0 }: Tunnel) {
+function startTunnel({ id, binaryPath }: Tunnel) {
   console.log(`\n🤖 📗 Setting up tunnel: "${id}"\n`)
 
   // make sure there are no previous connections open
@@ -57,10 +56,9 @@ function startTunnel({ id, binaryPath, maxRetryAttempts = 0 }: Tunnel) {
   // set up tunnel
   tunnelInstance = spawn(binaryPath, [`-i=${id}`])
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     tunnelInstance.stdout.on('data', logger(resolve))
     tunnelInstance.on('data', logger(resolve))
-    tunnelInstance.on('error', retry(resolve, reject, maxRetryAttempts))
   })
 }
 
@@ -75,7 +73,10 @@ function stopTunnel(exitCode: number): Promise<number> {
   })
 }
 
-function internalRunTests(configPath: string): Promise<number> {
+function internalRunTests(
+  configPath: string,
+  maxRetryAttempts: number
+): Promise<number> {
   // run tests
   console.log('\n🤖 📗 capturing screenshots\n')
   const params = ['--config', configPath, ...process.argv.slice(2)]
@@ -92,8 +93,9 @@ function internalRunTests(configPath: string): Promise<number> {
   nightwatch.stderr.on('data', data => console.error(data.toString()))
 
   // terminate
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     nightwatch.on('close', resolve)
+    nightwatch.on('error', retry(resolve, reject, maxRetryAttempts))
   })
 }
 
@@ -151,6 +153,7 @@ export default async function runTests({
   files,
   tunnel,
   outputPath,
+  maxRetryAttempts = 0,
 }: {|
   +storyRoot: string,
   +files: Array<StoryPaths>,
@@ -158,15 +161,18 @@ export default async function runTests({
   +tunnel?: Tunnel,
   +configPath: string,
   +outputPath?: string,
+  +maxRetryAttempts?: number,
 |}): Promise<ImgResult> {
   try {
-    if (tunnel) {
-      do {
-        await startTunnel(tunnel)
-      } while (shouldRetry)
-    }
+    let exitCode
 
-    const exitCode = await internalRunTests(configPath)
+    do {
+      if (tunnel) {
+        await startTunnel(tunnel)
+      }
+
+      exitCode = await internalRunTests(configPath, maxRetryAttempts)
+    } while (shouldRetry)
 
     if (exitCode !== 0) {
       await stopTunnel(exitCode)
