@@ -1,7 +1,6 @@
 // @flow
-
+/* eslint-disable no-await-in-loop */
 import { spawn } from 'child_process'
-import sauceConnect from 'node-sauce-connect'
 import { version } from '../package.json'
 import { readLogs, writeFile, compareImages } from './utils'
 import type {
@@ -9,7 +8,35 @@ import type {
   ImgResult,
   StoryPaths,
   Status,
+  Tunnel,
 } from './picturebook.types'
+
+let retryAttempts = 0
+let shouldRetry = false
+let tunnelInstance
+
+function killTunnelInstance() {
+  if (tunnelInstance) {
+    tunnelInstance.kill()
+  }
+}
+
+function retry(resolve, reject, maxRetryAttempts) {
+  return () => {
+    killTunnelInstance()
+
+    if (++retryAttempts > maxRetryAttempts) {
+      shouldRetry = false
+      reject(new Error('Unable to connect to Sauce Labs'))
+    } else {
+      console.log(
+        `Sauce Labs connection failed, attempting ${retryAttempts} of ${maxRetryAttempts} retries`
+      )
+      shouldRetry = true
+      resolve()
+    }
+  }
+}
 
 function logger(cb) {
   return data => {
@@ -21,24 +48,26 @@ function logger(cb) {
   }
 }
 
-function startTunnel(tunnelId: string) {
-  console.log(`\n🤖 📗 Setting up tunnel: "${tunnelId}"\n`)
+function startTunnel({ id, binaryPath, maxRetryAttempts = 0 }: Tunnel) {
+  console.log(`\n🤖 📗 Setting up tunnel: "${id}"\n`)
 
   // make sure there are no previous connections open
-  sauceConnect.stop()
+  killTunnelInstance()
 
   // set up tunnel
-  sauceConnect.start([`-i=${tunnelId}`])
+  tunnelInstance = spawn(binaryPath, [`-i=${id}`])
 
-  return new Promise(resolve => {
-    sauceConnect.defaultInstance.stdout.on('data', logger(resolve))
-    sauceConnect.defaultInstance.on('data', logger(resolve))
+  return new Promise((resolve, reject) => {
+    tunnelInstance.stdout.on('data', logger(resolve))
+    tunnelInstance.on('data', logger(resolve))
+    tunnelInstance.on('error', retry(resolve, reject, maxRetryAttempts))
   })
 }
 
 function stopTunnel(exitCode: number): Promise<number> {
   return new Promise((resolve, reject) => {
-    sauceConnect.stop()
+    killTunnelInstance()
+
     if (exitCode === 0) {
       return resolve(0)
     }
@@ -120,19 +149,21 @@ export default async function runTests({
   storyRoot,
   overwrite,
   files,
-  tunnelId,
+  tunnel,
   outputPath,
 }: {|
   +storyRoot: string,
   +files: Array<StoryPaths>,
   +overwrite: boolean,
-  +tunnelId?: string,
+  +tunnel?: Tunnel,
   +configPath: string,
   +outputPath?: string,
 |}): Promise<ImgResult> {
   try {
-    if (tunnelId) {
-      await startTunnel(tunnelId)
+    if (tunnel) {
+      do {
+        await startTunnel(tunnel)
+      } while (shouldRetry)
     }
 
     const exitCode = await internalRunTests(configPath)
@@ -150,7 +181,7 @@ export default async function runTests({
       files,
     })
 
-    if (tunnelId) {
+    if (tunnel) {
       await stopTunnel(exitCode)
     }
 

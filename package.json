@@ -22,7 +22,6 @@
   "dependencies": {
     "fs-extra": "7.0.0",
     "lodash": "4.17.11",
-    "node-sauce-connect": "4.5.0",
     "pixelmatch": "4.0.2",
     "png-crop": "0.0.2",
     "pngjs": "3.3.3",
