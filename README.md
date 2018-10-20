@@ -13,7 +13,7 @@ Instead of providing a wrapper on top of existing projects that will fall out of
 This project aims to provide utility methods to simplify [Storybook](https://storybook.js.org/), [SauceLabs](https://saucelabs.com/) and [Nightwatch](http://nightwatchjs.org/) configuration and screenshot comparison. Specifically:
 
 - **Creation of storybook stories**: They are created based on your file system structure
-- **Saucelabs tunnel setup**: Reduce SauceConnect config to the tunnel id and username / accessKey
+- **Saucelabs tunnel setup**: Reduce SauceConnect config to the SauceConnect binary path and username / accessKey
 - **Screenshot**: Take screenshots of every story on different browsers using SauceLabs and Nightwatch
 - **Image Comparison**: Compare and update screenshots to baselines collocated with your stories.
 
@@ -147,6 +147,10 @@ type ImgResults = {|
     screenshotPath: ?string,
     status: Status,
   |}
+type Tunnel = {|
+  id: string,
+  binaryPath: string,
+|}
 
 // Invoke nightwatch and run image comparison in SauceLabs
 function runTests(options: {|
@@ -154,7 +158,7 @@ function runTests(options: {|
   files: Array<StoryPaths>,     // output of getFiles()
   overwrite: boolean,           // true to replace failing or missing images
   storyRoot: string,            // absolute path to the stories
-  tunnelId?: string,            // if set, it will set up a SC tunnel with the id
+  tunnel?: Tunnel,              // if set, it will set up a SC tunnel with the id
   outputPath?: string,          // if set, where to store the test results as a
                                 // json file matching the return of `runTests`
 |}): Promise<{|
@@ -272,12 +276,12 @@ runTests({
     stories: requireContext(storyRoot, true, /\.(js|png)/),
   }),
   overwrite,
-  tunnelId: 'picturebook-sample',
+  tunnel,
   configPath: resolve(__dirname, 'nightwatch.conf.js'),
 })
 ```
 
-Note that if using a tunnel, `tunnel-identifier` on your nightwatch config must match the `tunnelId` parameter passed to `runTests`.
+Note that if using a tunnel, `tunnel-identifier` on your nightwatch config must match the `tunnel.id` parameter passed to `runTests`.
 
 ## 🙋 QYMA (Questions you may ask)
 
