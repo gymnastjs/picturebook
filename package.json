@@ -1,12 +1,16 @@
 {
   "name": "picturebook",
-  "version": "2.0.0-beta.13",
+  "version": "2.0.0-beta.16",
   "description": "Opinionated Storybook Setup",
   "main": "dist/index.js",
   "browser": "dist/picturebook.web.js",
   "repository": "https://github.com/obartra/picturebook",
   "author": "Oscar Bartra",
   "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "format": "prettier --write \"{{src,test,sampleFolder}/**/,}*.js\"",
     "test": "jest",
@@ -22,7 +26,6 @@
   "dependencies": {
     "fs-extra": "7.0.0",
     "lodash": "4.17.11",
-    "node-sauce-connect": "4.5.0",
     "pixelmatch": "4.0.2",
     "png-crop": "0.0.2",
     "pngjs": "3.3.3",

@@ -45,6 +45,7 @@
     "import/no-extraneous-dependencies": 0,
     "import/extensions": 0,
     "import/named": 0,
-    "no-restricted-syntax": [2, "WithStatement", "ClassDeclaration"]
+    "no-restricted-syntax": [2, "WithStatement", "ClassDeclaration"],
+    "no-await-in-loop": 0
   }
 }

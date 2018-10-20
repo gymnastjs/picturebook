@@ -77,3 +77,8 @@ export type ImgResult = {|
   +version: string,
   +date: string,
 |}
+
+export type Tunnel = {|
+  +id: string,
+  +binaryPath: string,
+|}
