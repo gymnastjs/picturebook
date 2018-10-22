@@ -75,6 +75,7 @@ function stopTunnel(exitCode: number): Promise<number> {
 
 function internalRunTests(
   configPath: string,
+  nightwatchBinaryPath: string,
   maxRetryAttempts: number
 ): Promise<number> {
   // run tests
@@ -85,7 +86,7 @@ function internalRunTests(
     params.push('--env', 'chrome')
   }
 
-  const nightwatch = spawn('./node_modules/.bin/nightwatch', params, {
+  const nightwatch = spawn(nightwatchBinaryPath, params, {
     stdio: 'pipe',
     env: process.env,
   })
@@ -147,6 +148,7 @@ function writeResults(
 }
 
 export default async function runTests({
+  nightwatchBinaryPath,
   configPath,
   storyRoot,
   overwrite,
@@ -155,6 +157,7 @@ export default async function runTests({
   outputPath,
   maxRetryAttempts = 0,
 }: {|
+  +nightwatchBinaryPath: string,
   +storyRoot: string,
   +files: Array<StoryPaths>,
   +overwrite: boolean,
@@ -171,7 +174,11 @@ export default async function runTests({
         await startTunnel(tunnel)
       }
 
-      exitCode = await internalRunTests(configPath, maxRetryAttempts)
+      exitCode = await internalRunTests(
+        configPath,
+        nightwatchBinaryPath,
+        maxRetryAttempts
+      )
     } while (shouldRetry)
 
     if (exitCode !== 0) {
