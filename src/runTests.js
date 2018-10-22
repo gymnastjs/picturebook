@@ -29,7 +29,8 @@ function retry(resolve, reject, maxRetryAttempts) {
       reject(exitCode)
     } else {
       console.log(
-        `Selenium server connection failed, attempting ${retryAttempts} of ${maxRetryAttempts} retries`
+        `Selenium server connection failed, attempting ${retryAttempts} of ${maxRetryAttempts} retries`,
+        exitCode
       )
       shouldRetry = true
       resolve(exitCode)
@@ -75,17 +76,16 @@ function stopTunnel(exitCode: number): Promise<number> {
 
 function internalRunTests(
   configPath: string,
+  nightwatchBinaryPath: string,
   maxRetryAttempts: number
 ): Promise<number> {
   // run tests
   console.log('\n🤖 📗 capturing screenshots\n')
   const params = ['--config', configPath, ...process.argv.slice(2)]
-
   if (!params.includes('--env')) {
     params.push('--env', 'chrome')
   }
-
-  const nightwatch = spawn('./node_modules/.bin/nightwatch', params, {
+  const nightwatch = spawn(nightwatchBinaryPath, params, {
     stdio: 'pipe',
     env: process.env,
   })
@@ -148,6 +148,7 @@ function writeResults(
 
 export default async function runTests({
   configPath,
+  nightwatchBinaryPath,
   storyRoot,
   overwrite,
   files,
@@ -162,6 +163,7 @@ export default async function runTests({
   +configPath: string,
   +outputPath?: string,
   +maxRetryAttempts?: number,
+  +nightwatchBinaryPath: string,
 |}): Promise<ImgResult> {
   try {
     let exitCode
@@ -171,7 +173,11 @@ export default async function runTests({
         await startTunnel(tunnel)
       }
 
-      exitCode = await internalRunTests(configPath, maxRetryAttempts)
+      exitCode = await internalRunTests(
+        configPath,
+        nightwatchBinaryPath,
+        maxRetryAttempts
+      )
     } while (shouldRetry)
 
     if (exitCode !== 0) {
@@ -190,7 +196,6 @@ export default async function runTests({
     if (tunnel) {
       await stopTunnel(exitCode)
     }
-
     return writeResults(outputPath, results, null)
   } catch (error) {
     return writeResults(outputPath, [], error)
