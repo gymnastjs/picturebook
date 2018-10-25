@@ -135,7 +135,7 @@ function writeResults(
   const status = getOverallStatus(counts)
   const date = new Date().toISOString()
 
-  const data = { error, counts, status, results, version, date }
+  const data = { error, counts, status, results, version, date, retryAttempts }
 
   if (error) {
     console.error(error)

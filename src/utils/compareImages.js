@@ -13,7 +13,7 @@ type Params = {
   overwrite?: boolean,
 }
 
-const diffRoot = resolve(__dirname, 'screenshot', 'reports', 'diffs')
+const diffRoot = resolve(__dirname, '../screenshot/reports/diffs')
 const toPct = num => `${num * 100}%`
 
 function updateReferenceImage({

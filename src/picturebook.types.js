@@ -76,6 +76,7 @@ export type ImgResult = {|
   |},
   +version: string,
   +date: string,
+  +retryAttempts: number,
 |}
 
 export type Tunnel = {|
