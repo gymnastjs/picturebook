@@ -28,10 +28,12 @@ function retry(resolve, reject, maxRetryAttempts) {
       shouldRetry = false
       reject(exitCode)
     } else {
-      console.log(
-        `Selenium server connection failed, attempting ${retryAttempts} of ${maxRetryAttempts} retries`
-      )
-      shouldRetry = true
+      shouldRetry = exitCode !== 0
+      if (shouldRetry) {
+        console.log(
+          `Selenium server connection failed, attempting ${retryAttempts} of ${maxRetryAttempts} retries`
+        )
+      }
       resolve(exitCode)
     }
   }
@@ -94,7 +96,7 @@ function internalRunTests(
 
   // terminate
   return new Promise((resolve, reject) => {
-    nightwatch.on('close', resolve)
+    nightwatch.on('close', retry(resolve, reject, maxRetryAttempts))
     nightwatch.on('error', retry(resolve, reject, maxRetryAttempts))
   })
 }
