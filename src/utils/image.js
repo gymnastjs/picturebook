@@ -70,6 +70,7 @@ export function getImageDiff(
         img1.height,
         {
           threshold,
+          includeAA: true,
         }
       )
 

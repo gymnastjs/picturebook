@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "2.0.0-beta.18",
+  "version": "2.0.0-beta.19",
   "description": "Opinionated Storybook Setup",
   "main": "dist/index.js",
   "browser": "dist/picturebook.web.js",
