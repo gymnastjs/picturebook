@@ -1,30 +1,18 @@
 // @flow
 import { dirname } from 'path'
 import { mkdirpSync } from 'fs-extra'
-import { createReadStream, createWriteStream, existsSync } from 'fs'
-import { PNG } from 'pngjs'
-import pixelmatch from 'pixelmatch'
+import {
+  createReadStream,
+  createWriteStream,
+  existsSync,
+  readFileSync,
+  writeFileSync,
+} from 'fs'
+import compareImages from 'resemblejs/compareImages'
 
-function readImage(path: string): Promise<ImageData> {
-  return new Promise((resolve, reject) => {
-    const img: any = createReadStream(path)
-      .pipe(new PNG())
-      .on('parsed', () => resolve(img))
-      .on('error', reject)
-  })
-}
-
-export function writeImage(
-  stream: stream$Readable,
-  path: string
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    mkdirpSync(dirname(path))
-    stream
-      .pipe(createWriteStream(path))
-      .on('close', resolve)
-      .on('error', reject)
-  })
+export function writeImage(buffer: Buffer, path: string): void {
+  mkdirpSync(dirname(path))
+  writeFileSync(path, buffer)
 }
 
 export function replaceImage(
@@ -44,42 +32,42 @@ export function replaceImage(
   })
 }
 
-function getSize(img: ImageData): string {
-  return `${img.width}x${img.height}`
-}
-
-export function getImageDiff(
+export async function getImageDiff(
   imgPath1: string,
-  imgPath2: string,
-  threshold: number
+  imgPath2: string
 ): Promise<{|
-  +diffThreshold: number,
-  +diff: PNG,
-  +img1Size: string,
-  +img2Size: string,
+  getBuffer: () => Buffer,
+  diffBounds: {
+    top: number,
+    left: number,
+    right: number,
+    bottom: number,
+  },
+  dimensionDifference: {
+    height: number,
+    width: number,
+  },
+  isSameDimensions: boolean,
+  misMatchPercentage: string,
+  error: void | string,
 |}> {
-  return Promise.all([readImage(imgPath1), readImage(imgPath2)]).then(
-    ([img1, img2]) => {
-      const diff = new PNG({ width: img1.width, height: img1.height })
-      const total = img1.width * img1.height
-      const count = pixelmatch(
-        img1.data,
-        img2.data,
-        diff.data,
-        img1.width,
-        img1.height,
-        {
-          threshold,
-          includeAA: true,
-        }
-      )
+  const img1 = readFileSync(imgPath1)
+  const img2 = readFileSync(imgPath2)
 
-      return {
-        diff,
-        diffThreshold: Math.round((count * 100) / total) / 100,
-        img1Size: getSize(img1),
-        img2Size: getSize(img2),
-      }
-    }
-  )
+  return compareImages(img1, img2, {
+    output: {
+      errorColor: {
+        red: 255,
+        green: 0,
+        blue: 255,
+      },
+      errorType: 'movement',
+      transparency: 0.3,
+      largeImageThreshold: 1200,
+      useCrossOrigin: false,
+      outputDiff: true,
+    },
+    scaleToSameSize: true,
+    ignore: 'antialiasing',
+  })
 }

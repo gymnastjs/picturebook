@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "2.0.0-beta.19",
+  "version": "2.0.0-beta.21",
   "description": "Opinionated Storybook Setup",
   "main": "dist/index.js",
   "browser": "dist/picturebook.web.js",
@@ -20,16 +20,15 @@
     "test:watch": "yarn test --watch",
     "start": "yarn && yarn build && cd sampleFolder && yarn && yarn start",
     "test:app": "cd sampleFolder && yarn test --env chrome,firefox,ie11,edge,safari,iphone7",
-    "update-deps": "yarn upgrade --exact --latest && cd sampleFolder && yarn upgrade --exact --latest && cd .. && yarn ci",
+    "update-deps": "bash ./scripts/updateDeps.sh",
     "ci": "yarn build && yarn lint && yarn flow check && yarn test"
   },
   "dependencies": {
     "fs-extra": "7.0.0",
     "lodash": "4.17.11",
-    "pixelmatch": "4.0.2",
     "png-crop": "0.0.2",
-    "pngjs": "3.3.3",
     "rimraf": "2.6.2",
+    "resemblejs": "2.10.3",
     "selenium-server-standalone-jar": "3.14.0"
   },
   "devDependencies": {
@@ -60,6 +59,7 @@
     "eslint-plugin-promise": "4.0.1",
     "eslint-plugin-react": "7.11.1",
     "flow-bin": "0.82.0",
+    "flow-typed": "2.5.1",
     "jest": "23.6.0",
     "prettier": "1.14.3",
     "react": "16.5.2",

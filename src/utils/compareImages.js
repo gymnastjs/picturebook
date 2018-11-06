@@ -36,31 +36,6 @@ function updateReferenceImage({
     }))
 }
 
-function writeDiffImage({
-  diffData,
-  diffPath,
-  baseResponse,
-  diffThreshold,
-  threshold,
-}) {
-  return writeImage(diffData, diffPath)
-    .then(() => ({
-      ...baseResponse,
-      status: 'FAILED',
-      error: `Pixel differences of ${toPct(
-        diffThreshold
-      )} are above the threshold (${toPct(threshold)})`,
-      diffPath,
-      diffThreshold,
-    }))
-    .catch(e => ({
-      ...baseResponse,
-      status: 'FAILED',
-      error: `Image creation failed ${e.message}`,
-      diffThreshold,
-    }))
-}
-
 function compareImageGroup({
   imgFileName,
   name,
@@ -121,45 +96,58 @@ function compareImageGroup({
     })
   }
 
-  return getImageDiff(imgFileName, referencePath, 0)
-    .then(({ diffThreshold, diff, img1Size, img2Size }) => {
-      const sizeMismatch = img1Size !== img2Size
-      const aboveThreshold = diffThreshold > threshold
-      const hasError = sizeMismatch || aboveThreshold
+  return getImageDiff(imgFileName, referencePath)
+    .then(
+      ({
+        misMatchPercentage,
+        isSameDimensions,
+        dimensionDifference,
+        getBuffer,
+      }) => {
+        const diffThreshold = parseFloat(misMatchPercentage) || 0
+        const aboveThreshold = diffThreshold > threshold
+        const hasError = !isSameDimensions || aboveThreshold
 
-      if (hasError && overwrite) {
-        return updateReferenceImage({
-          imgFileName,
-          referencePath,
-          baseResponse,
-          diffThreshold,
-        })
-      }
+        if (hasError && overwrite) {
+          return updateReferenceImage({
+            imgFileName,
+            referencePath,
+            baseResponse,
+            diffThreshold,
+          })
+        }
 
-      if (sizeMismatch) {
+        if (!isSameDimensions) {
+          return {
+            ...baseResponse,
+            status: 'FAILED',
+            error: `Image size mismatch of ${dimensionDifference.width}x${
+              dimensionDifference.height
+            }px`,
+            diffPath,
+            diffThreshold,
+          }
+        }
+        if (diffThreshold > threshold) {
+          writeImage(getBuffer(), diffPath)
+
+          return {
+            ...baseResponse,
+            status: 'FAILED',
+            error: `Pixel differences of ${toPct(
+              diffThreshold
+            )} are above the threshold (${toPct(threshold)})`,
+            diffPath,
+            diffThreshold,
+          }
+        }
         return {
           ...baseResponse,
-          status: 'FAILED',
-          error: `Image size mismatch ${img1Size} vs reference ${img2Size}`,
-          diffPath,
+          status: 'SUCCESS',
           diffThreshold,
         }
       }
-      if (diffThreshold > threshold) {
-        return writeDiffImage({
-          diffData: diff.pack(),
-          diffPath,
-          baseResponse,
-          diffThreshold,
-          threshold,
-        })
-      }
-      return {
-        ...baseResponse,
-        status: 'SUCCESS',
-        diffThreshold,
-      }
-    })
+    )
     .catch(e => ({
       ...baseResponse,
       status: 'FAILED',

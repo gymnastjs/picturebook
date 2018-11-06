@@ -79,23 +79,23 @@ function internalRunTests(
   configPath: string,
   maxRetryAttempts: number
 ): Promise<number> {
-  // run tests
-  console.log('\n🤖 📗 capturing screenshots\n')
-  const params = ['--config', configPath, ...process.argv.slice(2)]
-
-  if (!params.includes('--env')) {
-    params.push('--env', 'chrome')
-  }
-
-  const nightwatch = spawn('./node_modules/.bin/nightwatch', params, {
-    stdio: 'pipe',
-    env: process.env,
-  })
-  nightwatch.stdout.on('data', data => console.log(data.toString()))
-  nightwatch.stderr.on('data', data => console.error(data.toString()))
-
-  // terminate
   return new Promise((resolve, reject) => {
+    // run tests
+    console.log('\n🤖 📗 capturing screenshots\n')
+    const params = ['--config', configPath, ...process.argv.slice(2)]
+
+    if (!params.includes('--env')) {
+      params.push('--env', 'chrome')
+    }
+
+    const nightwatch = spawn('./node_modules/.bin/nightwatch', params, {
+      stdio: 'pipe',
+      env: process.env,
+    })
+    nightwatch.stdout.on('data', data => console.log(data.toString()))
+    nightwatch.stderr.on('data', data => console.error(data.toString()))
+
+    // terminate
     nightwatch.on('close', retry(resolve, reject, maxRetryAttempts))
     nightwatch.on('error', retry(resolve, reject, maxRetryAttempts))
   })
@@ -155,7 +155,7 @@ export default async function runTests({
   files,
   tunnel,
   outputPath,
-  maxRetryAttempts = 0,
+  maxRetryAttempts = 3,
 }: {|
   +storyRoot: string,
   +files: Array<StoryPaths>,
