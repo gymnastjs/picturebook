@@ -34,7 +34,7 @@ function groupByParent(
 export function createStories(
   groupedPaths: $ReadOnlyArray<LoadedStory>,
   { storiesOf, decorators }: LoadStoryOptions
-) {
+): Array<LoadedStory> {
   const grouped = groupByParent(groupedPaths)
 
   return map(grouped, (storyGroup, title) => {
