@@ -17,7 +17,7 @@
     "babel-core": "6.26.3",
     "babel-runtime": "6.26.0",
     "moment": "2.22.2",
-    "nightwatch": "0.9.21",
+    "nightwatch": "1.0.18",
     "react": "16.6.3",
     "react-dom": "16.6.3",
     "require-context": "1.1.0",

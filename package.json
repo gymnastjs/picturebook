@@ -58,10 +58,10 @@
     "eslint-plugin-prettier": "3.0.0",
     "eslint-plugin-promise": "4.0.1",
     "eslint-plugin-react": "7.11.1",
-    "nightwatch": "0.9.21",
     "flow-bin": "0.88.0",
     "flow-typed": "2.5.1",
     "jest": "23.6.0",
+    "nightwatch": "1.0.18",
     "prettier": "1.15.3",
     "react": "16.6.3",
     "react-dom": "16.6.3",
@@ -69,6 +69,6 @@
     "webpack-cli": "3.1.2"
   },
   "peerDependencies": {
-    "nightwatch": ">=0.9.x"
+    "nightwatch": ">=1.0.x"
   }
 }
