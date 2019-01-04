@@ -24,6 +24,7 @@
     "ci": "yarn build && yarn lint && yarn flow check && yarn test"
   },
   "dependencies": {
+    "chromedriver": "2.45.0",
     "fs-extra": "7.0.1",
     "lodash": "4.17.11",
     "png-crop": "0.0.2",

@@ -12,6 +12,20 @@
       "extract": { "top": 0, "left": 0, "width": 1280, "height": 854 }
     }
   },
+  "chrome-headless": {
+    "desiredCapabilities": {
+      "browserName": "chrome-headless",
+      "screenResolution": "1280x960",
+      "chromeOptions": {
+        "args": ["--headless", "--disable-gpu=true"]
+      }
+    },
+    "custom_vars": {
+      "name": "chrome-headless",
+      "platform": "desktop",
+      "extract": { "top": 0, "left": 0, "width": 1280, "height": 854 }
+    }
+  },
   "ie11": {
     "desiredCapabilities": {
       "platform": "Windows 10",

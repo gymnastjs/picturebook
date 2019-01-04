@@ -77,7 +77,8 @@ function stopTunnel(exitCode: number): Promise<number> {
 
 function internalRunTests(
   configPath: string,
-  maxRetryAttempts: number
+  maxRetryAttempts: number,
+  browserConfigs: string
 ): Promise<number> {
   return new Promise((resolve, reject) => {
     // run tests
@@ -85,7 +86,7 @@ function internalRunTests(
     const params = ['--config', configPath, ...process.argv.slice(2)]
 
     if (!params.includes('--env')) {
-      params.push('--env', 'chrome')
+      params.push('--env', browserConfigs)
     }
 
     const nightwatch = spawn('./node_modules/.bin/nightwatch', params, {
@@ -156,6 +157,7 @@ export default async function runTests({
   tunnel,
   outputPath,
   maxRetryAttempts = 3,
+  browserConfigs = 'chrome', // Default browser to use is chrome, the list of configs can be found in browsers.json
 }: {|
   +storyRoot: string,
   +files: Array<StoryPaths>,
@@ -164,6 +166,7 @@ export default async function runTests({
   +configPath: string,
   +outputPath?: string,
   +maxRetryAttempts?: number,
+  +browserConfigs?: string,
 |}): Promise<ImgResult> {
   try {
     let exitCode
@@ -173,7 +176,11 @@ export default async function runTests({
         await startTunnel(tunnel)
       }
 
-      exitCode = await internalRunTests(configPath, maxRetryAttempts)
+      exitCode = await internalRunTests(
+        configPath,
+        maxRetryAttempts,
+        browserConfigs
+      )
     } while (shouldRetry)
 
     if (exitCode !== 0) {
