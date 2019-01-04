@@ -7,15 +7,15 @@ const { runTests, getFiles } = require('../dist')
 const storyRoot = resolve(__dirname, './stories')
 const overwrite = process.argv.includes('-u')
 
-const osPlatform = os.platform() === 'darwin' ? 'osx' : 'linux'
-const sauceConnectBinaryPath = resolve(
-  __dirname,
-  `./bin/sauceconnect-${osPlatform}`
-)
-const tunnel = {
-  id: 'picturebook-sample',
-  binaryPath: sauceConnectBinaryPath,
-}
+// const osPlatform = os.platform() === 'darwin' ? 'osx' : 'linux'
+// const sauceConnectBinaryPath = resolve(
+//   __dirname,
+//   `./bin/sauceconnect-${osPlatform}`
+// )
+// const tunnel = {
+//   id: 'picturebook-sample',
+//   binaryPath: sauceConnectBinaryPath,
+// }
 
 function getErrorMessage({
   status,
@@ -41,7 +41,7 @@ runTests({
     stories: requireContext(storyRoot, true, /\.(js|png)/),
   }),
   overwrite,
-  tunnel,
+  // tunnel,
   configPath: resolve(__dirname, 'nightwatch.conf.js'),
   outputPath: resolve(__dirname, 'picturebook-results.json'),
 })

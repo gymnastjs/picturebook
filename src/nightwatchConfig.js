@@ -3,6 +3,7 @@
 import type { StoryPaths } from './picturebook.types'
 
 const selenium = require('selenium-server-standalone-jar')
+const chromedriver = require('chromedriver')
 const path = require('path')
 const { merge, mapValues } = require('lodash')
 const defaultBrowsers = require('./utils/browsers.json')
@@ -68,14 +69,14 @@ module.exports = function nightwatchConfig({
     screenshots: {
       enabled: false,
     },
-    proxy,
+    // proxy,
     desiredCapabilities,
-    selenium_host: 'ondemand.saucelabs.com',
-    selenium_port: 80,
+    selenium_host: 'localhost',
+    selenium_port: 4444,
     start_process: true,
     launch_url: files[0].url || 'http://localhost:6006/iframe.html',
-    username,
-    access_key,
+    // username,
+    // access_key,
   }
 
   return {
@@ -84,7 +85,7 @@ module.exports = function nightwatchConfig({
       start_process: true,
       server_path: selenium.path,
       cli_args: {
-        'webdriver.chrome.driver': '',
+        'webdriver.chrome.driver': chromedriver.path,
         'webdriver.ie.driver': '',
       },
     },

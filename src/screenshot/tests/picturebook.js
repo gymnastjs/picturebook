@@ -14,12 +14,15 @@ function onError(err) {
 module.exports = {
   Screenshot: browser => {
     const { files, screenResolution } = browser.options.desiredCapabilities
-    const {
-      name,
-      platform,
-      extract,
-    } = browser.globals.test_settings.custom_vars
-    const { localhostAlias, localhostAliasBrowsers } = browser.globals
+    // const {
+    //   name,
+    //   platform,
+    //   extract,
+    // } = browser.globals.test_settings.custom_vars
+    const name = 'chrome'
+    const platform = 'desktop'
+    const extract = { top: 0, left: 0, width: 1280, height: 854 }
+    const { localhostAlias, localhostAliasBrowsers = [] } = browser.globals
     const logs = []
 
     for (let i = 0; i < files.length; i++) {
