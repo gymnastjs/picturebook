@@ -69,6 +69,7 @@ function compareImageGroup({
     })
   }
 
+  console.log('comparegroups: ', screenshots, browserKey, browser, overwrite)
   if (isEmpty(screenshots) || !screenshots[browserKey]) {
     return replaceImage(imgFileName, referencePath)
       .then(() => ({
@@ -167,7 +168,7 @@ export default function compareImages({
   rimraf.sync(diffRoot)
 
   const results = []
-
+  console.log('compareImages screenshots: ', screenshots)
   return screenshots
     .map(screenshot => ({
       root,

@@ -88,6 +88,7 @@ function internalRunTests(
     if (!params.includes('--env')) {
       params.push('--env', browserConfigs)
     }
+    console.log('internalRunTests params: ', params)
 
     const nightwatch = spawn('./node_modules/.bin/nightwatch', params, {
       stdio: 'pipe',
