@@ -6,7 +6,7 @@ module.exports = function sauce(callback) {
   const sessionId = capabilities['webdriver.remote.sessionid']
 
   if (!username || !accessKey || !sessionId) {
-    console.error('No username, accessKey or sessionId')
+    // console.error('No username, accessKey or sessionId')
     callback()
     return
   }

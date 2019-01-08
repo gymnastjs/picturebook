@@ -77,7 +77,7 @@ module.exports = function nightwatchConfig({
     selenium_port,
     start_process: true,
     launch_url: files[0].url || 'http://localhost:6006/iframe.html',
-    // username,
+    // username,  TODO
     // access_key,
   }
 

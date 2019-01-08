@@ -12,16 +12,16 @@
       "extract": { "top": 0, "left": 0, "width": 1280, "height": 854 }
     }
   },
-  "chrome-headless": {
+  "chromeless": {
     "desiredCapabilities": {
-      "browserName": "chrome-headless",
+      "browserName": "chromeless",
       "screenResolution": "1280x960",
       "chromeOptions": {
         "args": ["--headless", "--disable-gpu=true"]
       }
     },
     "custom_vars": {
-      "name": "chrome-headless",
+      "name": "chromeless",
       "platform": "desktop",
       "extract": { "top": 0, "left": 0, "width": 1280, "height": 854 }
     }
