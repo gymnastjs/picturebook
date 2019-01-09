@@ -158,7 +158,7 @@ export default async function runTests({
   tunnel,
   outputPath,
   maxRetryAttempts = 3,
-  browserConfigs = 'chrome', // Default browser to use is chrome, the list of configs can be found in browsers.json
+  browserConfigs = 'chrome_headless', // Default browser to use is chrome, the list of configs can be found in browsers.json
 }: {|
   +storyRoot: string,
   +files: Array<StoryPaths>,
@@ -190,6 +190,7 @@ export default async function runTests({
     }
 
     const screenshots = readLogs()
+    console.log('screenshots: ', screenshots[0])
     const results = await compareImages({
       screenshots,
       root: storyRoot,

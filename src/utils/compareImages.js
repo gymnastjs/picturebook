@@ -69,7 +69,7 @@ function compareImageGroup({
     })
   }
 
-  console.log('comparegroups: ', screenshots, browserKey, browser, overwrite)
+  // console.log('comparegroups: ', screenshots, browserKey, browser, overwrite)
   if (isEmpty(screenshots) || !screenshots[browserKey]) {
     return replaceImage(imgFileName, referencePath)
       .then(() => ({
@@ -168,21 +168,25 @@ export default function compareImages({
   rimraf.sync(diffRoot)
 
   const results = []
-  console.log('compareImages screenshots: ', screenshots)
-  return screenshots
-    .map(screenshot => ({
-      root,
-      threshold,
-      overwrite,
-      screenshots: {},
-      ...screenshot,
-      ...files.find(({ name }) => name === screenshot.name),
-    }))
+  console.log('compareImages_files', files[0])
+
+  const ss = screenshots.map(screenshot => ({
+    root,
+    threshold,
+    overwrite,
+    screenshots: {},
+    ...screenshot,
+    ...files.find(({ name }) => name === screenshot.name),
+  }))
+
+  // console.log(ss)
+  return ss
     .reduce(
       (acc, current) =>
-        acc.then(() =>
-          compareImageGroup(current).then(result => results.push(result))
-        ),
+        acc.then(() => {
+          // console.log('REDUCE current', current)
+          return compareImageGroup(current).then(result => results.push(result))
+        }),
       Promise.resolve()
     )
     .then(() => results)

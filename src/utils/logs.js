@@ -12,7 +12,6 @@ export function writeFile(path: string, data: Object) {
 }
 
 export function writeLog(name: string, data: ImgLog) {
-  console.log('writeLog ', name, data)
   const path = resolve(logPath, `${name}.log`)
 
   return writeFile(path, data)

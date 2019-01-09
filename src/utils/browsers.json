@@ -14,7 +14,7 @@
   },
   "chrome_headless": {
     "desiredCapabilities": {
-      "browserName": "chrome",
+      "browserName": "chrome_headless",
       "screenResolution": "1280x960",
       "chromeOptions": {
         "args": ["--headless", "--disable-gpu=true"]

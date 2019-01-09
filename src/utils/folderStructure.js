@@ -16,7 +16,7 @@ function groupRelatedFiles(
     .replace(/^(\.\/|\/)/, '')
 
   // https://regex101.com/r/dqUZ6u/2
-  return (flattenedPath.match(/([^.]+)[a-z.0-9]+$/) || [])[1]
+  return (flattenedPath.match(/([^.]+)[a-z0-9._]+$/) || [])[1]
 }
 
 function deKebab(text) {
@@ -57,6 +57,19 @@ function createRelatedFileGroup(
     return undefined
   }
 
+  console.log('files', files)
+  console.log('name', name)
+  console.log('=====================')
+
+  /*console.log(
+    'files.filter(filter.screenshots)',
+    files.filter(filter.screenshots)
+  )
+  console.log(
+    'groupFilesBySubExtension',
+    groupFilesBySubExtension(files.filter(filter.screenshots))
+  )
+*/
   return {
     name,
     parents,
@@ -92,9 +105,11 @@ export default function folderStructure({
   filter,
   findKindAndStory,
 }: Options): Array<StoryPaths> {
+  console.log('stories.keys()', stories.keys())
   const groups = groupBy(stories.keys(), filename =>
     groupRelatedFiles(filename, flattenFolders)
   )
+  console.log('groups', groups)
 
   return compact(
     map(groups, (files, name) =>
