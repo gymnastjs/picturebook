@@ -15,8 +15,8 @@ function groupRelatedFiles(
     .reduce(removeFolderInPath, relativePath)
     .replace(/^(\.\/|\/)/, '')
 
-  // https://regex101.com/r/dqUZ6u/2
-  return (flattenedPath.match(/([^.]+)[a-z.0-9]+$/) || [])[1]
+  // https://regex101.com/r/dqUZ6u/3
+  return (flattenedPath.match(/([^.]+)[a-z0-9._-]+$/) || [])[1]
 }
 
 function deKebab(text) {
