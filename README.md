@@ -180,6 +180,8 @@ function runTests(options: {|
 // Nightwatch config generation helper
 function nightwatchConfig(options: {|
   desiredCapabilities?: {},     // nightwatch desired capabilities object
+  localOverrides: {},           // overrides set when browser.local flag is true
+  remoteOverrides: {},          // overrides when browser.local flag is falsy
   files: Array<StoryPaths>,     // output of getFiles()
   username: string,             // SauceLabs username
   access_key: string,           // SauceLabs accessKey
@@ -195,6 +197,8 @@ function nightwatchConfig(options: {|
         screenResolution: string,
       },
       custom_vars: {|           // Custom properties required per browser config:
+        local?: boolean,        // optionally run this browser locally. Useful for
+                                //   a mix of remote and local browsers
         name: string,           // Must match "browserName"
         platform: string,       // "mobile" | "desktop" but any string is allowed
         extract?: {|            // If cropping the output, specify crop dimensions

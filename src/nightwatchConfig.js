@@ -2,6 +2,7 @@
 /* eslint-disable camelcase */
 import type { StoryPaths } from './picturebook.types'
 
+const chromedriver = require('chromedriver')
 const selenium = require('selenium-server-standalone-jar')
 const path = require('path')
 const { merge, mapValues } = require('lodash')
@@ -22,6 +23,7 @@ type Overrides = {
       },
       custom_vars: {|
         name: string,
+        local?: boolean,
         platform: string,
         extract?: {|
           top: number,
@@ -34,6 +36,8 @@ type Overrides = {
   },
   localhostAlias?: string,
   localhostAliasBrowsers?: Array<string>,
+  localOverrides: {},
+  remoteOverrides: {},
   proxy?: {},
 }
 
@@ -49,6 +53,8 @@ module.exports = function nightwatchConfig({
   browsers,
   localhostAliasBrowsers = ['edge', 'safari'],
   localhostAlias = 'localtest.dev',
+  localOverrides,
+  remoteOverrides,
   ...overrides
 }: Overrides) {
   if (!files.length) {
@@ -69,13 +75,23 @@ module.exports = function nightwatchConfig({
       enabled: false,
     },
     proxy,
+    launch_url: files[0].url || 'http://localhost:6006/iframe.html',
     desiredCapabilities,
+    start_process: true,
+  }
+  const localSettings = {
+    ...commonSettings,
+    selenium_host: 'localhost',
+    selenium_port: 4444,
+    ...localOverrides,
+  }
+  const remoteSettings = {
+    ...commonSettings,
     selenium_host: 'ondemand.saucelabs.com',
     selenium_port: 80,
-    start_process: true,
-    launch_url: files[0].url || 'http://localhost:6006/iframe.html',
     username,
     access_key,
+    ...remoteOverrides,
   }
 
   return {
@@ -84,7 +100,7 @@ module.exports = function nightwatchConfig({
       start_process: true,
       server_path: selenium.path,
       cli_args: {
-        'webdriver.chrome.driver': '',
+        'webdriver.chrome.driver': chromedriver.path,
         'webdriver.ie.driver': '',
       },
     },
@@ -92,7 +108,6 @@ module.exports = function nightwatchConfig({
     live_output: true,
     skip_testcases_on_fail: false,
     test_settings: {
-      default: commonSettings,
       ...mapValues({ ...defaultBrowsers, ...browsers }, browser =>
         merge(
           {
@@ -101,7 +116,7 @@ module.exports = function nightwatchConfig({
               localhostAliasBrowsers,
             },
           },
-          commonSettings,
+          browser.custom_vars.local ? localSettings : remoteSettings,
           browser
         )
       ),

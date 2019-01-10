@@ -1,4 +1,18 @@
 {
+  "chrome_local": {
+    "desiredCapabilities": {
+      "browserName": "chrome",
+      "chromeOptions": {
+        "args": ["--headless", "--window-size=1280x960"]
+      }
+    },
+    "custom_vars": {
+      "local": true,
+      "name": "chrome_local",
+      "platform": "desktop",
+      "extract": { "top": 0, "left": 0, "width": 1280, "height": 854 }
+    }
+  },
   "chrome": {
     "desiredCapabilities": {
       "platform": "macOS 10.12",
