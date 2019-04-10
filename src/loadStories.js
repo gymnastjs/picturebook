@@ -45,7 +45,8 @@ export function createStories(
         (acc, current) => current(acc, story, storyModule) || acc,
         story.main
       )
-      storyModule.add(story.title, decorated)
+      const array = Array.isArray(decorated) ? decorated : [decorated]
+      storyModule.add(story.title, ...array)
     })
 
     return storyModule

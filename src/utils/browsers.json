@@ -42,7 +42,7 @@
   "edge": {
     "desiredCapabilities": {
       "platform": "Windows 10",
-      "version": "16.16299",
+      "version": "18.17763",
       "browserName": "MicrosoftEdge",
       "screenResolution": "1280x960"
     },
@@ -54,8 +54,8 @@
   },
   "firefox": {
     "desiredCapabilities": {
-      "platform": "macOS 10.12",
-      "version": "62.0",
+      "platform": "macOS 10.14",
+      "version": "66.0",
       "browserName": "firefox",
       "screenResolution": "1280x960"
     },
@@ -63,8 +63,8 @@
   },
   "safari": {
     "desiredCapabilities": {
-      "platform": "macOS 10.13",
-      "version": "11.1",
+      "platform": "macOS 10.14",
+      "version": "12.0",
       "browserName": "safari",
       "screenResolution": "1280x960"
     },
@@ -76,12 +76,12 @@
   },
   "iphone7": {
     "desiredCapabilities": {
-      "appiumVersion": "1.8.1",
+      "appiumVersion": "1.9.1",
       "browserName": "Safari",
       "deviceName": "iPhone 7 Plus Simulator",
       "deviceOrientation": "portrait",
       "platformName": "iOS",
-      "platformVersion": "11.3"
+      "platformVersion": "12.0"
     },
     "custom_vars": {
       "name": "iphone7",

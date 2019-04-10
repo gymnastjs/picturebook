@@ -10,9 +10,10 @@ export default function getDefaults<P: Options | LoadStoryOptions>(
     flattenFolders: ['__screenshots__', '__snapshots__'],
     filter: {
       screenshots: file => file.endsWith('.png'),
-      tests: file => file.endsWith('.spec.js') || file.endsWith('.test.js'),
-      docs: file => file.endsWith('.md'),
-      story: (file, target) => file.endsWith(`${target}.js`),
+      tests: file => /\.(spec|test)\.(t|j)sx?$/.test(file || ''),
+      docs: file => /\.md$/.test(file || ''),
+      story: (file, target) =>
+        new RegExp(`${target}\\.(t|j)sx?$`).test(file || ''),
       ...userOptions.filter,
     },
     findKindAndStory: story => ({

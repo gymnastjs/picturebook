@@ -68,6 +68,11 @@ function createRelatedFileGroup(
   }
 }
 
+function formatUrlFragment(fragment) {
+  const safeFragment = fragment.replace(/[._\s,;><=+`'"]/g, '-')
+  return encodeURIComponent(safeFragment.toLowerCase())
+}
+
 function addUrl(
   story: ?$Diff<StoryPaths, { +url: ?string }>,
   baseUrl: ?string,
@@ -78,9 +83,9 @@ function addUrl(
   }
 
   const { selectedKind, selectedStory } = findKindAndStory(story)
-  const url = `${baseUrl}/iframe.html?selectedKind=${encodeURIComponent(
-    selectedKind
-  )}&selectedStory=${encodeURIComponent(selectedStory)}`
+  const parent = formatUrlFragment(selectedKind)
+  const child = formatUrlFragment(selectedStory)
+  const url = `${baseUrl}/iframe.html?id=${parent}--${child}`
 
   return { ...story, url }
 }

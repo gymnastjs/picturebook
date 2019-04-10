@@ -1,17 +1,20 @@
-import { storiesOf, configure, addDecorator } from '@storybook/react'
-import { withMarkdownNotes } from '@storybook/addon-notes'
+import {
+  storiesOf,
+  configure,
+  addDecorator,
+  addParameters,
+} from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import { setOptions } from '@storybook/addon-options'
 import { withConsole } from '@storybook/addon-console'
 import * as picturebook from '../../dist/picturebook.web'
 
-/**
- * Some addons can be defined globally, e.g options or knobs. This is the
- * simplest use case
- */
-setOptions({
+addParameters({
   name: 'Test Storybook',
 })
+/**
+ * Some addons can be defined globally, e.g knobs. This is the
+ * simplest use case
+ */
 addDecorator(withKnobs)
 addDecorator((storyFn, context) => withConsole()(storyFn)(context))
 
@@ -23,7 +26,7 @@ function loadStories() {
      * providing component-specific documentation, the decorators array allows
      * specifying any modifiers to each story
      */
-    decorators: [(story, { doc }) => doc && withMarkdownNotes(doc)(story)],
+    decorators: [(story, { doc }) => [story, doc ? { notes: doc } : {}]],
     stories: require.context('../stories', true, /\.(js|md|png)/),
   })
 }

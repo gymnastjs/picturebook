@@ -1,6 +1,6 @@
 {
   "name": "picturebook",
-  "version": "2.0.0-beta.24",
+  "version": "3.0.0-alpha.2",
   "description": "Opinionated Storybook Setup",
   "main": "dist/index.js",
   "browser": "dist/picturebook.web.js",
@@ -44,7 +44,7 @@
     "@babel/preset-flow": "7.0.0",
     "@babel/preset-react": "7.0.0",
     "@babel/runtime": "7.2.0",
-    "@storybook/react": "4.0.12",
+    "@storybook/react": "5.0.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
@@ -72,6 +72,6 @@
     "webpack-cli": "3.1.2"
   },
   "peerDependencies": {
-    "nightwatch": ">=0.9.x"
+    "nightwatch": "<=0.9.x"
   }
 }
