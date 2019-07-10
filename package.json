@@ -23,7 +23,9 @@
     "test:app-local": "cd sampleFolder && yarn test --env chrome_local",
     "test:app-all": "cd sampleFolder && yarn test --env chrome,chrome_local,firefox,ie11,edge,safari,iphone7",
     "update-deps": "bash ./scripts/updateDeps.sh",
-    "ci": "yarn build && yarn lint && yarn flow check && yarn test"
+    "ci": "yarn build && yarn lint && yarn flow check && yarn test",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "chromedriver": "2.45.0",
@@ -32,7 +34,8 @@
     "png-crop": "0.0.2",
     "resemblejs": "3.0.0",
     "rimraf": "2.6.2",
-    "selenium-server-standalone-jar": "3.141.5"
+    "selenium-server-standalone-jar": "3.141.5",
+    "snyk": "^1.192.4"
   },
   "devDependencies": {
     "@babel/cli": "7.2.0",
@@ -73,5 +76,6 @@
   },
   "peerDependencies": {
     "nightwatch": ">=0.9.x"
-  }
+  },
+  "snyk": true
 }
